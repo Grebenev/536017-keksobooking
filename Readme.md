@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Konstantin Grebenev](https://up.htmlacademy.ru/javascript/14/user/536017).
-* Наставник: `Неизвестно`.
+* Наставник: [Никита Пиковец](https://up.htmlacademy.ru/javascript/14/user/503133)..
 
 ---
 
