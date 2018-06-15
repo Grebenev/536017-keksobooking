@@ -44,23 +44,28 @@ var getRandom = function (min, max, array) {
   return (min || max) ? Math.floor(Math.random() * (max - min + 1)) + min : Math.floor(Math.random() * array.length);
 };
 
+//Функция перемешивания
+var shuffleArray = function (array) {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+}
 
-// Функция создания массива объектов, принимает на вход число, отдает массив объектов
+// Функция создания главного массива объектов, принимает на вход число, отдает массив объектов
 var createItems = function (numbers) {
-
   var massive = []; // создает массив для объектов
-
   for (var i = 0; i < numbers; i++) { // запускает цикл от количества на входе функции
     var obj = {}; // создает основной объект
-    obj.author = {}; // создает подобъект author
+    obj.author = {}; // создает подобъект author и т д
     obj.offer = {};
     obj.location = {};
-
     obj.author.avatar = 'img/avatars/user0' + (i + 1) + '.png';
-
     obj.location.x = getRandom(300, 900, 0); // присваивает ключу x случайное значение от 300 до 900
     obj.location.y = getRandom(130, 630, 0);
-
     obj.offer.title = titleRelty[i];
     obj.offer.address = obj.location.x + ', ' + obj.location.y;
     obj.offer.price = getRandom(1000, 1000000, 0);
@@ -69,7 +74,7 @@ var createItems = function (numbers) {
     obj.offer.guests = getRandom(1, 10, 0);
     obj.offer.checkin = checkRealty[getRandom(0, 0, checkRealty)];
     obj.offer.checkout = checkRealty[getRandom(0, 0, checkRealty)];
-    obj.offer.features = featuresRealty[getRandom(0, 0, featuresRealty)];
+    obj.offer.features = shuffleArray(featuresRealty);
     obj.offer.description = '';
     obj.offer.photos = photosRealty[getRandom(0, 0, photosRealty)];
 
@@ -79,17 +84,16 @@ var createItems = function (numbers) {
   return massive;
 };
 
-var mainMassive = createItems(8); // Присваиваем результат функции /создание 8-ми объектов в массиве/
+var mainMassive = createItems(8); // Присваиваем результат функции /создание 8-ми объектов в главном массиве/
 
 var map = document.querySelector('.map').classList.remove('map--faded'); // ищет map и убирает класс map--faded
 
+var template = document.querySelector('template');
+
+var pinTemplate = template.content.querySelector('.map__pin');
 var pinsTo = document.querySelector('.map__pins'); // ищет div куда вставлять пины на карте
 
-var template = document.querySelector('template');
-var pinTemplate = template.content.querySelector('.map__pin');
-var cardTemplate = template.content.querySelector('.map__card');
-
-// Функция создания пинов /на входе массив объектов
+// Функция создания пинов /на входе главный массив объектов
 var createPin = function (massive) {
   var pinElement = pinTemplate.cloneNode(true); // клонирует и присваивает переменной контент из шаблона
   pinElement.style.left = massive.location.x - 40 / 2 + 'px'; // изменяет положение
@@ -99,6 +103,8 @@ var createPin = function (massive) {
 
   return pinElement;
 };
+
+var cardTemplate = template.content.querySelector('.map__card');
 
 // Функция создания карточки товара
 var createCard = function (massive) {
@@ -111,10 +117,20 @@ var createCard = function (massive) {
   return cardElement;
 };
 
+var parentFeatures =  template.content.querySelector('.popup__features');
+
+//Функция создания фич
+var createFeatures = function (massiveFearures) {
+  for (var i = 0; i < getRandom(0, 0, massiveFearures); i++) {
+    var createElement = document.createElement('li');
+    createElement.className = 'popup__feature' + ' popup__feature--' + massiveFearures[i];
+    parentFeatures.appendChild(createElement);
+  }
+}
+
 // Функция вставки пинов на карту / на входе массив объектов
 var insertPin = function (massive) {
   var fragment = document.createDocumentFragment();
-
   for (var i = 0; i < massive.length; i++) {
     fragment.appendChild(createPin(massive[i]));
   }
@@ -127,10 +143,11 @@ var cardBefore = document.querySelector('.map__filters-container'); // пере�
 var insertCard = function (massive) {
   var fragment = document.createDocumentFragment();
   fragment.appendChild(createCard(massive[0]));
-  // cardBefore.appendChild(fragment);
-  map.insertBefore(fragment, cardBefore); // ошибка
+  cardBefore.appendChild(fragment); // вставка пока не туда
+  // map.insertBefore(fragment, cardBefore); // ошибка что-то пока не выходит
 };
 
 
-insertPin(mainMassive);
+createFeatures(shuffleArray(featuresRealty)); // запуск функции с функцией перемешивания массива featuresRealty
+insertPin(mainMassive); // запуск функции с главным массивом объектов
 insertCard(mainMassive);
