@@ -1,6 +1,9 @@
 'use strict';
 
-var titleRelty = [
+var PIC_WHIDTH = 40;
+var PIC_HEIGHT = 40;
+
+var titleRealty = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
   'Огромный прекрасный дворец',
@@ -17,6 +20,13 @@ var typeRealty = [
   'house',
   'bungalo'
 ];
+
+var RealtyTypes = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalo: 'Бунгало'
+};
 
 var checkRealty = [
   '12:00',
@@ -44,7 +54,7 @@ var getRandom = function (min, max, array) {
   return (min || max) ? Math.floor(Math.random() * (max - min + 1)) + min : Math.floor(Math.random() * array.length);
 };
 
-//Функция перемешивания
+// Функция перемешивания
 var shuffleArray = function (array) {
   for (var i = array.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
@@ -53,20 +63,20 @@ var shuffleArray = function (array) {
     array[j] = temp;
   }
   return array;
-}
+};
 
 // Функция создания главного массива объектов, принимает на вход число, отдает массив объектов
 var createItems = function (numbers) {
-  var massive = []; // создает массив для объектов
-  for (var i = 0; i < numbers; i++) { // запускает цикл от количества на входе функции
-    var obj = {}; // создает основной объект
-    obj.author = {}; // создает подобъект author и т д
+  var mainTtems = [];
+  for (var i = 0; i < numbers; i++) {
+    var obj = {};
+    obj.author = {};
     obj.offer = {};
     obj.location = {};
     obj.author.avatar = 'img/avatars/user0' + (i + 1) + '.png';
-    obj.location.x = getRandom(300, 900, 0); // присваивает ключу x случайное значение от 300 до 900
+    obj.location.x = getRandom(300, 900, 0);
     obj.location.y = getRandom(130, 630, 0);
-    obj.offer.title = titleRelty[i];
+    obj.offer.title = titleRealty[i];
     obj.offer.address = obj.location.x + ', ' + obj.location.y;
     obj.offer.price = getRandom(1000, 1000000, 0);
     obj.offer.type = typeRealty[getRandom(0, 0, typeRealty)];
@@ -76,78 +86,92 @@ var createItems = function (numbers) {
     obj.offer.checkout = checkRealty[getRandom(0, 0, checkRealty)];
     obj.offer.features = shuffleArray(featuresRealty);
     obj.offer.description = '';
-    obj.offer.photos = photosRealty[getRandom(0, 0, photosRealty)];
+    obj.offer.photos = shuffleArray(photosRealty);
 
-    massive.push(obj); // вставляет объекты в массив
+    mainTtems.push(obj); // вставляет объекты в массив
   }
 
-  return massive;
+  return mainTtems;
 };
 
-var mainMassive = createItems(8); // Присваиваем результат функции /создание 8-ми объектов в главном массиве/
+var mainTtemsVarible = createItems(8); // Присваиваем результат функции /создание 8-ми объектов в главном массиве/
 
-var map = document.querySelector('.map').classList.remove('map--faded'); // ищет map и убирает класс map--faded
+var map = document.querySelector('.map');
+map.classList.remove('map--faded'); // ищет map и убирает класс map--faded
 
 var template = document.querySelector('template');
 
 var pinTemplate = template.content.querySelector('.map__pin');
-var pinsTo = document.querySelector('.map__pins'); // ищет div куда вставлять пины на карте
+var pins = document.querySelector('.map__pins'); // ищет div куда вставлять пины на карте
 
-// Функция создания пинов /на входе главный массив объектов
-var createPin = function (massive) {
+// Функция создания пинов
+var createPin = function (mainTtems) {
   var pinElement = pinTemplate.cloneNode(true); // клонирует и присваивает переменной контент из шаблона
-  pinElement.style.left = massive.location.x - 40 / 2 + 'px'; // изменяет положение
-  pinElement.style.top = massive.location.y - 40 + 'px';
-  pinElement.querySelector('img').src = massive.author.avatar; // ищет в pinElement тег img и в его объекте src переопределяет картинку в пине
-  pinElement.querySelector('img').alt = massive.offer.title;
-
+  pinElement.style.left = mainTtems.location.x - PIC_WHIDTH / 2 + 'px'; // изменяет положение
+  pinElement.style.top = mainTtems.location.y - PIC_HEIGHT + 'px';
+  pinElement.querySelector('img').src = mainTtems.author.avatar; // ищет в pinElement тег img и в его объекте src переопределяет картинку в пине
+  pinElement.querySelector('img').alt = mainTtems.offer.title;
   return pinElement;
 };
-
 var cardTemplate = template.content.querySelector('.map__card');
 
 // Функция создания карточки товара
-var createCard = function (massive) {
+var createCard = function (mainTtems) {
   var cardElement = cardTemplate.cloneNode(true);
-  cardElement.querySelector('.popup__title').textContent = massive.offer.title;
-  cardElement.querySelector('.popup__text--address').textContent = massive.offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = massive.offer.price;
-  cardElement.querySelector('.popup__type').textContent = massive.offer.type;
-
+  cardElement.querySelector('.popup__title').textContent = mainTtems.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = mainTtems.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = mainTtems.offer.price + '/ночь.';
+  for (var key in RealtyTypes) {
+    if (mainTtems.offer.type === key) {
+      cardElement.querySelector('.popup__type').textContent = RealtyTypes[key];
+    }
+  }
+  cardElement.querySelector('.popup__text--capacity').textContent = mainTtems.offer.rooms + ' комнаты для ' + mainTtems.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + mainTtems.offer.checkin + ' выезд до ' + mainTtems.offer.checkout;
+  cardElement.querySelector('.popup__description').textContent = mainTtems.offer.description;
   return cardElement;
 };
 
-var parentFeatures =  template.content.querySelector('.popup__features');
+var parentFeatures = template.content.querySelector('.popup__features');
+parentFeatures.innerHTML = '';
 
-//Функция создания фич
-var createFeatures = function (massiveFearures) {
-  for (var i = 0; i < getRandom(0, 0, massiveFearures); i++) {
+// Функция создания фич
+var createFeatures = function (FearuresArray) {
+  for (var i = 0; i < getRandom(0, 0, FearuresArray); i++) {
     var createElement = document.createElement('li');
-    createElement.className = 'popup__feature' + ' popup__feature--' + massiveFearures[i];
+    createElement.className = 'popup__feature' + ' popup__feature--' + FearuresArray[i];
     parentFeatures.appendChild(createElement);
   }
-}
-
-// Функция вставки пинов на карту / на входе массив объектов
-var insertPin = function (massive) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < massive.length; i++) {
-    fragment.appendChild(createPin(massive[i]));
-  }
-  pinsTo.appendChild(fragment);
 };
 
-var cardBefore = document.querySelector('.map__filters-container'); // перед ним будет вставка каточек
+// var picTemplate = template.content.querySelector('.popup__photos');
+//
+// var insertPhotos = function (mainTtems) {
+//   for (var i = 0; i < mainTtems.offer.photos.length; i++) {
+//     picTemplate.querySelector('img').src = mainTtems.offer.photos;
+//   }
+//
+// };
+
+// Функция вставки пинов на карту / на входе массив объектов
+var insertPin = function (mainTtems) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < mainTtems.length; i++) {
+    fragment.appendChild(createPin(mainTtems[i]));
+  }
+  pins.appendChild(fragment);
+};
+
+var filtersContainer = document.querySelector('.map__filters-container'); // перед ним будет вставка каточек
 
 // Функция вставки карточек
-var insertCard = function (massive) {
+var insertCard = function (mainTtems) {
   var fragment = document.createDocumentFragment();
-  fragment.appendChild(createCard(massive[0]));
-  cardBefore.appendChild(fragment); // вставка пока не туда
-  // map.insertBefore(fragment, cardBefore); // ошибка что-то пока не выходит
+  fragment.appendChild(createCard(mainTtems[0]));
+  map.insertBefore(fragment, filtersContainer);
 };
 
 
 createFeatures(shuffleArray(featuresRealty)); // запуск функции с функцией перемешивания массива featuresRealty
-insertPin(mainMassive); // запуск функции с главным массивом объектов
-insertCard(mainMassive);
+insertPin(mainTtemsVarible); // запуск функции с главным массивом объектов
+insertCard(mainTtemsVarible);
