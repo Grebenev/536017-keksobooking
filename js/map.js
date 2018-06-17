@@ -76,7 +76,7 @@ var createItems = function (numbers) {
     obj.author.avatar = 'img/avatars/user0' + (i + 1) + '.png';
     obj.location.x = getRandom(300, 900, 0);
     obj.location.y = getRandom(130, 630, 0);
-    obj.offer.title = titleRealty[i];
+    obj.offer.title = titleRealty[getRandom(0, 0, titleRealty)];
     obj.offer.address = obj.location.x + ', ' + obj.location.y;
     obj.offer.price = getRandom(1000, 1000000, 0);
     obj.offer.type = typeRealty[getRandom(0, 0, typeRealty)];
@@ -87,29 +87,24 @@ var createItems = function (numbers) {
     obj.offer.features = shuffleArray(featuresRealty);
     obj.offer.description = '';
     obj.offer.photos = shuffleArray(photosRealty);
-
     mainTtems.push(obj); // вставляет объекты в массив
   }
-
   return mainTtems;
 };
 
-var mainTtemsVarible = createItems(8); // Присваиваем результат функции /создание 8-ми объектов в главном массиве/
-
+var mainTtemsVarible = createItems(8);
 var map = document.querySelector('.map');
-map.classList.remove('map--faded'); // ищет map и убирает класс map--faded
-
+map.classList.remove('map--faded');
 var template = document.querySelector('template');
-
 var pinTemplate = template.content.querySelector('.map__pin');
-var pins = document.querySelector('.map__pins'); // ищет div куда вставлять пины на карте
+var pins = document.querySelector('.map__pins');
 
 // Функция создания пинов
 var createPin = function (mainTtems) {
-  var pinElement = pinTemplate.cloneNode(true); // клонирует и присваивает переменной контент из шаблона
-  pinElement.style.left = mainTtems.location.x - PIC_WHIDTH / 2 + 'px'; // изменяет положение
+  var pinElement = pinTemplate.cloneNode(true);
+  pinElement.style.left = mainTtems.location.x - PIC_WHIDTH / 2 + 'px';
   pinElement.style.top = mainTtems.location.y - PIC_HEIGHT + 'px';
-  pinElement.querySelector('img').src = mainTtems.author.avatar; // ищет в pinElement тег img и в его объекте src переопределяет картинку в пине
+  pinElement.querySelector('img').src = mainTtems.author.avatar;
   pinElement.querySelector('img').alt = mainTtems.offer.title;
   return pinElement;
 };
@@ -144,14 +139,21 @@ var createFeatures = function (FearuresArray) {
   }
 };
 
-// var picTemplate = template.content.querySelector('.popup__photos');
-//
-// var insertPhotos = function (mainTtems) {
-//   for (var i = 0; i < mainTtems.offer.photos.length; i++) {
-//     picTemplate.querySelector('img').src = mainTtems.offer.photos;
-//   }
-//
-// };
+var parentPhotos = template.content.querySelector('.popup__photos');
+parentPhotos.innerHTML = '';
+
+// Функция фото
+var insertPhotos = function (photosArray) {
+  for (var i = 0; i < photosArray.length; i++) {
+    var createElement = document.createElement('img');
+    createElement.className = 'popup__photo';
+    createElement.setAttribute('src', photosArray[i]);
+    createElement.setAttribute('width', '45');
+    createElement.setAttribute('height', '40');
+    createElement.setAttribute('alt', 'Фотография жилья');
+    parentPhotos.appendChild(createElement);
+  }
+};
 
 // Функция вставки пинов на карту / на входе массив объектов
 var insertPin = function (mainTtems) {
@@ -172,6 +174,7 @@ var insertCard = function (mainTtems) {
 };
 
 
-createFeatures(shuffleArray(featuresRealty)); // запуск функции с функцией перемешивания массива featuresRealty
-insertPin(mainTtemsVarible); // запуск функции с главным массивом объектов
+createFeatures(shuffleArray(featuresRealty));
+insertPhotos(shuffleArray(photosRealty));
+insertPin(mainTtemsVarible);
 insertCard(mainTtemsVarible);
