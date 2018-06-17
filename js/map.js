@@ -92,7 +92,7 @@ var createItems = function (numbers) {
   return mainItems;
 };
 
-var mainItemsVarible = createItems(8);
+var Items = createItems(8);
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 var template = document.querySelector('template');
@@ -138,8 +138,8 @@ var insertPhotos = function (mainItems) {
 
 // Функция создания карточки товара
 var createCard = function (mainItems) {
-  createFeatures(mainItemsVarible);
-  insertPhotos(mainItemsVarible);
+  createFeatures(Items);
+  insertPhotos(Items);
   var cardElement = cardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__title').textContent = mainItems.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = mainItems.offer.address;
@@ -172,5 +172,5 @@ var insertCard = function (mainItems) {
   map.insertBefore(fragment, filtersContainer);
 };
 
-insertPin(mainItemsVarible);
-insertCard(mainItemsVarible);
+insertPin(Items);
+insertCard(Items);
