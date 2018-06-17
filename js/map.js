@@ -3,7 +3,7 @@
 var PIN_WHIDTH = 40;
 var PIN_HEIGHT = 40;
 
-var titleRealty = [
+var titles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
   'Огромный прекрасный дворец',
@@ -14,27 +14,27 @@ var titleRealty = [
   'Неуютное бунгало по колено в воде'
 ];
 
-var typeRealty = [
+var types = [
   'palace',
   'flat',
   'house',
   'bungalo'
 ];
 
-var RealtyTypes = {
+var typeHomes = {
   palace: 'Дворец',
   flat: 'Квартира',
   house: 'Дом',
   bungalo: 'Бунгало'
 };
 
-var checkRealty = [
+var checks = [
   '12:00',
   '13:00',
   '14:00'
 ];
 
-var featuresRealty = [
+var features = [
   'wifi',
   'dishwasher',
   'parking',
@@ -43,13 +43,13 @@ var featuresRealty = [
   'conditioner'
 ];
 
-var photosRealty = [
+var photos = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
-//  Функция случайных чисел, от минимального до максимального /min, max/ или от длинны массива /array/
+//  Функция случайных чисел, от min до max  или от длинны массива
 var getRandom = function (min, max, array) {
   return (min || max) ? Math.floor(Math.random() * (max - min + 1)) + min : Math.floor(Math.random() * array.length);
 };
@@ -76,17 +76,17 @@ var createItems = function (numbers) {
     obj.author.avatar = 'img/avatars/user0' + (i + 1) + '.png';
     obj.location.x = getRandom(300, 900, 0);
     obj.location.y = getRandom(130, 630, 0);
-    obj.offer.title = titleRealty[getRandom(0, 0, titleRealty)];
+    obj.offer.title = titles[getRandom(0, 0, titles)];
     obj.offer.address = obj.location.x + ', ' + obj.location.y;
     obj.offer.price = getRandom(1000, 1000000, 0);
-    obj.offer.type = typeRealty[getRandom(0, 0, typeRealty)];
+    obj.offer.type = types[getRandom(0, 0, types)];
     obj.offer.rooms = getRandom(1, 5, 0);
     obj.offer.guests = getRandom(1, 10, 0);
-    obj.offer.checkin = checkRealty[getRandom(0, 0, checkRealty)];
-    obj.offer.checkout = checkRealty[getRandom(0, 0, checkRealty)];
-    obj.offer.features = shuffleArray(featuresRealty.slice(getRandom(0, 0, featuresRealty)));
+    obj.offer.checkin = checks[getRandom(0, 0, checks)];
+    obj.offer.checkout = checks[getRandom(0, 0, checks)];
+    obj.offer.features = shuffleArray(features.slice(getRandom(0, 0, features)));
     obj.offer.description = '';
-    obj.offer.photos = shuffleArray(photosRealty);
+    obj.offer.photos = shuffleArray(photos);
     mainItems.push(obj); // вставляет объекты в массив
   }
   return mainItems;
@@ -144,9 +144,9 @@ var createCard = function (mainItems) {
   cardElement.querySelector('.popup__title').textContent = mainItems.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = mainItems.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = mainItems.offer.price + '/ночь.';
-  for (var key in RealtyTypes) {
+  for (var key in typeHomes) {
     if (mainItems.offer.type === key) {
-      cardElement.querySelector('.popup__type').textContent = RealtyTypes[key];
+      cardElement.querySelector('.popup__type').textContent = typeHomes[key];
     }
   }
   cardElement.querySelector('.popup__text--capacity').textContent = mainItems.offer.rooms + ' комнаты для ' + mainItems.offer.guests + ' гостей';
