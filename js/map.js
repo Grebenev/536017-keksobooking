@@ -67,7 +67,7 @@ var shuffleArray = function (array) {
 
 // Функция создания главного массива объектов, принимает на вход число, отдает массив объектов
 var createItems = function (numbers) {
-  var mainTtems = [];
+  var mainItems = [];
   for (var i = 0; i < numbers; i++) {
     var obj = {};
     obj.author = {};
@@ -87,12 +87,12 @@ var createItems = function (numbers) {
     obj.offer.features = shuffleArray(featuresRealty);
     obj.offer.description = '';
     obj.offer.photos = shuffleArray(photosRealty);
-    mainTtems.push(obj); // вставляет объекты в массив
+    mainItems.push(obj); // вставляет объекты в массив
   }
-  return mainTtems;
+  return mainItems;
 };
 
-var mainTtemsVarible = createItems(8);
+var mainItemsVarible = createItems(8);
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 var template = document.querySelector('template');
@@ -100,30 +100,30 @@ var pinTemplate = template.content.querySelector('.map__pin');
 var pins = document.querySelector('.map__pins');
 
 // Функция создания пинов
-var createPin = function (mainTtems) {
+var createPin = function (mainItems) {
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.style.left = mainTtems.location.x - PIC_WHIDTH / 2 + 'px';
-  pinElement.style.top = mainTtems.location.y - PIC_HEIGHT + 'px';
-  pinElement.querySelector('img').src = mainTtems.author.avatar;
-  pinElement.querySelector('img').alt = mainTtems.offer.title;
+  pinElement.style.left = mainItems.location.x - PIC_WHIDTH / 2 + 'px';
+  pinElement.style.top = mainItems.location.y - PIC_HEIGHT + 'px';
+  pinElement.querySelector('img').src = mainItems.author.avatar;
+  pinElement.querySelector('img').alt = mainItems.offer.title;
   return pinElement;
 };
 var cardTemplate = template.content.querySelector('.map__card');
 
 // Функция создания карточки товара
-var createCard = function (mainTtems) {
+var createCard = function (mainItems) {
   var cardElement = cardTemplate.cloneNode(true);
-  cardElement.querySelector('.popup__title').textContent = mainTtems.offer.title;
-  cardElement.querySelector('.popup__text--address').textContent = mainTtems.offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = mainTtems.offer.price + '/ночь.';
+  cardElement.querySelector('.popup__title').textContent = mainItems.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = mainItems.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = mainItems.offer.price + '/ночь.';
   for (var key in RealtyTypes) {
-    if (mainTtems.offer.type === key) {
+    if (mainItems.offer.type === key) {
       cardElement.querySelector('.popup__type').textContent = RealtyTypes[key];
     }
   }
-  cardElement.querySelector('.popup__text--capacity').textContent = mainTtems.offer.rooms + ' комнаты для ' + mainTtems.offer.guests + ' гостей';
-  cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + mainTtems.offer.checkin + ' выезд до ' + mainTtems.offer.checkout;
-  cardElement.querySelector('.popup__description').textContent = mainTtems.offer.description;
+  cardElement.querySelector('.popup__text--capacity').textContent = mainItems.offer.rooms + ' комнаты для ' + mainItems.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + mainItems.offer.checkin + ' выезд до ' + mainItems.offer.checkout;
+  cardElement.querySelector('.popup__description').textContent = mainItems.offer.description;
   return cardElement;
 };
 
@@ -131,10 +131,10 @@ var parentFeatures = template.content.querySelector('.popup__features');
 parentFeatures.innerHTML = '';
 
 // Функция создания фич
-var createFeatures = function (FearuresArray) {
-  for (var i = 0; i < getRandom(0, 0, FearuresArray); i++) {
+var createFeatures = function (mainItems) {
+  for (var i = 0; i < mainItems[0].offer.features.length; i++) {
     var createElement = document.createElement('li');
-    createElement.className = 'popup__feature' + ' popup__feature--' + FearuresArray[i];
+    createElement.className = 'popup__feature' + ' popup__feature--' + mainItems[0].offer.features[i];
     parentFeatures.appendChild(createElement);
   }
 };
@@ -143,11 +143,11 @@ var parentPhotos = template.content.querySelector('.popup__photos');
 parentPhotos.innerHTML = '';
 
 // Функция фото
-var insertPhotos = function (photosArray) {
-  for (var i = 0; i < photosArray.length; i++) {
+var insertPhotos = function (mainItems) {
+  for (var i = 0; i < mainItems[0].offer.photos.length; i++) {
     var createElement = document.createElement('img');
     createElement.className = 'popup__photo';
-    createElement.setAttribute('src', photosArray[i]);
+    createElement.setAttribute('src', mainItems[0].offer.photos[i]);
     createElement.setAttribute('width', '45');
     createElement.setAttribute('height', '40');
     createElement.setAttribute('alt', 'Фотография жилья');
@@ -156,10 +156,10 @@ var insertPhotos = function (photosArray) {
 };
 
 // Функция вставки пинов на карту / на входе массив объектов
-var insertPin = function (mainTtems) {
+var insertPin = function (mainItems) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < mainTtems.length; i++) {
-    fragment.appendChild(createPin(mainTtems[i]));
+  for (var i = 0; i < mainItems.length; i++) {
+    fragment.appendChild(createPin(mainItems[i]));
   }
   pins.appendChild(fragment);
 };
@@ -167,14 +167,14 @@ var insertPin = function (mainTtems) {
 var filtersContainer = document.querySelector('.map__filters-container'); // перед ним будет вставка каточек
 
 // Функция вставки карточек
-var insertCard = function (mainTtems) {
+var insertCard = function (mainItems) {
   var fragment = document.createDocumentFragment();
-  fragment.appendChild(createCard(mainTtems[0]));
+  fragment.appendChild(createCard(mainItems[0]));
   map.insertBefore(fragment, filtersContainer);
 };
 
 
-createFeatures(shuffleArray(featuresRealty));
-insertPhotos(shuffleArray(photosRealty));
-insertPin(mainTtemsVarible);
-insertCard(mainTtemsVarible);
+createFeatures(mainItemsVarible);
+insertPhotos(mainItemsVarible);
+insertPin(mainItemsVarible);
+insertCard(mainItemsVarible);
