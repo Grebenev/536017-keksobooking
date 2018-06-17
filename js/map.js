@@ -84,7 +84,7 @@ var createItems = function (numbers) {
     obj.offer.guests = getRandom(1, 10, 0);
     obj.offer.checkin = checkRealty[getRandom(0, 0, checkRealty)];
     obj.offer.checkout = checkRealty[getRandom(0, 0, checkRealty)];
-    obj.offer.features = shuffleArray(featuresRealty);
+    obj.offer.features = shuffleArray(featuresRealty.slice(getRandom(0, 0, featuresRealty)));
     obj.offer.description = '';
     obj.offer.photos = shuffleArray(photosRealty);
     mainItems.push(obj); // вставляет объекты в массив
