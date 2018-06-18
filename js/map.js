@@ -2,6 +2,8 @@
 
 var PIN_WHIDTH = 40;
 var PIN_HEIGHT = 40;
+var CARD_NUNBER = 1;
+var CARD_QUANTITY = 8;
 
 var titles = [
   'Большая уютная квартира',
@@ -66,9 +68,9 @@ var shuffleArray = function (array) {
 };
 
 // Функция создания главного массива объектов, принимает на вход число, отдает массив объектов
-var createItems = function (numbers) {
+var createItems = function (number) {
   var mainItems = [];
-  for (var i = 0; i < numbers; i++) {
+  for (var i = 0; i < number; i++) {
     var obj = {};
     obj.author = {};
     obj.offer = {};
@@ -76,7 +78,7 @@ var createItems = function (numbers) {
     obj.author.avatar = 'img/avatars/user0' + (i + 1) + '.png';
     obj.location.x = getRandom(300, 900, 0);
     obj.location.y = getRandom(130, 630, 0);
-    obj.offer.title = titles[getRandom(0, 0, titles)];
+    obj.offer.title = titles[i];
     obj.offer.address = obj.location.x + ', ' + obj.location.y;
     obj.offer.price = getRandom(1000, 1000000, 0);
     obj.offer.type = types[getRandom(0, 0, types)];
@@ -92,7 +94,7 @@ var createItems = function (numbers) {
   return mainItems;
 };
 
-var Items = createItems(8);
+
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 var template = document.querySelector('template');
@@ -100,35 +102,42 @@ var pinTemplate = template.content.querySelector('.map__pin');
 var pins = document.querySelector('.map__pins');
 
 // Функция создания пинов
-var createPin = function (mainItems) {
+var createPin = function (array) {
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.style.left = mainItems.location.x - PIN_WHIDTH / 2 + 'px';
-  pinElement.style.top = mainItems.location.y - PIN_HEIGHT + 'px';
-  pinElement.querySelector('img').src = mainItems.author.avatar;
-  pinElement.querySelector('img').alt = mainItems.offer.title;
+  pinElement.style.left = array.location.x - PIN_WHIDTH / 2 + 'px';
+  pinElement.style.top = array.location.y - PIN_HEIGHT + 'px';
+  pinElement.querySelector('img').src = array.author.avatar;
+  pinElement.querySelector('img').alt = array.offer.title;
   return pinElement;
 };
 var cardTemplate = template.content.querySelector('.map__card');
-var parentFeatures = template.content.querySelector('.popup__features');
-parentFeatures.innerHTML = '';
+
+
+// Функция очистки DOM
+var clearDom = function (classname) {
+  var clear = template.content.querySelector(classname);
+  clear.innerHTML = '';
+};
 
 // Функция создания фич
-var createFeatures = function (mainItems) {
-  for (var i = 0; i < mainItems[0].offer.features.length; i++) {
+var createFeatures = function (array, cardNumber) {
+  clearDom('.popup__features');
+  var parentFeatures = template.content.querySelector('.popup__features');
+  for (var i = 0; i < array[cardNumber].offer.features.length; i++) {
     var createElement = document.createElement('li');
-    createElement.className = 'popup__feature' + ' popup__feature--' + mainItems[0].offer.features[i];
+    createElement.className = 'popup__feature' + ' popup__feature--' + array[cardNumber].offer.features[i];
     parentFeatures.appendChild(createElement);
   }
 };
-var parentPhotos = template.content.querySelector('.popup__photos');
-parentPhotos.innerHTML = '';
 
 // Функция фото
-var insertPhotos = function (mainItems) {
-  for (var i = 0; i < mainItems[0].offer.photos.length; i++) {
+var insertPhotos = function (array, cardNumber) {
+  clearDom('.popup__photos');
+  var parentPhotos = template.content.querySelector('.popup__photos');
+  for (var i = 0; i < array[cardNumber].offer.photos.length; i++) {
     var createElement = document.createElement('img');
     createElement.className = 'popup__photo';
-    createElement.setAttribute('src', mainItems[0].offer.photos[i]);
+    createElement.setAttribute('src', array[0].offer.photos[i]);
     createElement.setAttribute('width', '45');
     createElement.setAttribute('height', '40');
     createElement.setAttribute('alt', 'Фотография жилья');
@@ -137,40 +146,42 @@ var insertPhotos = function (mainItems) {
 };
 
 // Функция создания карточки товара
-var createCard = function (mainItems) {
-  createFeatures(Items);
-  insertPhotos(Items);
+var createCard = function (array) {
+  createFeatures(items, CARD_NUNBER);
+  insertPhotos(items, CARD_NUNBER);
   var cardElement = cardTemplate.cloneNode(true);
-  cardElement.querySelector('.popup__title').textContent = mainItems.offer.title;
-  cardElement.querySelector('.popup__text--address').textContent = mainItems.offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = mainItems.offer.price + '/ночь.';
+  cardElement.querySelector('.popup__title').textContent = array.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = array.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = array.offer.price + '/ночь.';
   for (var key in typeHomes) {
-    if (mainItems.offer.type === key) {
+    if (array.offer.type === key) {
       cardElement.querySelector('.popup__type').textContent = typeHomes[key];
     }
   }
-  cardElement.querySelector('.popup__text--capacity').textContent = mainItems.offer.rooms + ' комнаты для ' + mainItems.offer.guests + ' гостей';
-  cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + mainItems.offer.checkin + ' выезд до ' + mainItems.offer.checkout;
-  cardElement.querySelector('.popup__description').textContent = mainItems.offer.description;
+  cardElement.querySelector('.popup__text--capacity').textContent = array.offer.rooms + ' комнаты для ' + array.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + array.offer.checkin + ' выезд до ' + array.offer.checkout;
+  cardElement.querySelector('.popup__description').textContent = array.offer.description;
+
   return cardElement;
 };
 
 // Функция вставки пинов на карту / на входе массив объектов
-var insertPin = function (mainItems) {
+var insertPin = function (array) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < mainItems.length; i++) {
-    fragment.appendChild(createPin(mainItems[i]));
+  for (var i = 0; i < array.length; i++) {
+    fragment.appendChild(createPin(array[i]));
   }
   pins.appendChild(fragment);
 };
 var filtersContainer = document.querySelector('.map__filters-container');
 
 // Функция вставки карточек
-var insertCard = function (mainItems) {
+var insertCard = function (array, cardNumber) {
   var fragment = document.createDocumentFragment();
-  fragment.appendChild(createCard(mainItems[0]));
+  fragment.appendChild(createCard(array[cardNumber]));
   map.insertBefore(fragment, filtersContainer);
 };
 
-insertPin(Items);
-insertCard(Items);
+var items = createItems(CARD_QUANTITY);
+insertPin(items);
+insertCard(items, CARD_NUNBER);
