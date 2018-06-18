@@ -97,9 +97,6 @@ var createItems = function (number) {
 // массив объектов
 var items = createItems(CARD_QUANTITY);
 
-// Объект из массива
-var object = items[CARD_NUMBER];
-
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 var template = document.querySelector('template');
@@ -151,12 +148,12 @@ var insertPhotos = function (obj) {
 
 // Функция создания карточки товара
 var createCard = function (obj) {
-  createFeatures(object);
-  insertPhotos(object);
+  createFeatures(obj);
+  insertPhotos(obj);
   var cardElement = cardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__title').textContent = obj.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = obj.offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = obj.offer.price + '/ночь.';
+  cardElement.querySelector('.popup__text--price').textContent = obj.offer.price + ' ₽/ночь.';
   for (var key in typeHomes) {
     if (obj.offer.type === key) {
       cardElement.querySelector('.popup__type').textContent = typeHomes[key];
@@ -186,4 +183,4 @@ var insertCard = function (obj) {
 };
 
 insertPin(items);
-insertCard(object);
+insertCard(items[CARD_NUMBER]);
