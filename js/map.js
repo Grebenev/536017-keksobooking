@@ -2,7 +2,7 @@
 
 var PIN_WHIDTH = 40;
 var PIN_HEIGHT = 40;
-var CARD_NUNBER = 1;
+var CARD_NUMBER = 0;
 var CARD_QUANTITY = 8;
 
 var titles = [
@@ -94,6 +94,11 @@ var createItems = function (number) {
   return mainItems;
 };
 
+// массив объектов
+var items = createItems(CARD_QUANTITY);
+
+// Объект из массива
+var object = items[CARD_NUMBER];
 
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
@@ -112,7 +117,6 @@ var createPin = function (array) {
 };
 var cardTemplate = template.content.querySelector('.map__card');
 
-
 // Функция очистки DOM
 var clearDom = function (classname) {
   var clear = template.content.querySelector(classname);
@@ -120,24 +124,24 @@ var clearDom = function (classname) {
 };
 
 // Функция создания фич
-var createFeatures = function (array, cardNumber) {
+var createFeatures = function (obj) {
   clearDom('.popup__features');
   var parentFeatures = template.content.querySelector('.popup__features');
-  for (var i = 0; i < array[cardNumber].offer.features.length; i++) {
+  for (var i = 0; i < obj.offer.features.length; i++) {
     var createElement = document.createElement('li');
-    createElement.className = 'popup__feature' + ' popup__feature--' + array[cardNumber].offer.features[i];
+    createElement.className = 'popup__feature' + ' popup__feature--' + obj.offer.features[i];
     parentFeatures.appendChild(createElement);
   }
 };
 
 // Функция фото
-var insertPhotos = function (array, cardNumber) {
+var insertPhotos = function (obj) {
   clearDom('.popup__photos');
   var parentPhotos = template.content.querySelector('.popup__photos');
-  for (var i = 0; i < array[cardNumber].offer.photos.length; i++) {
+  for (var i = 0; i < obj.offer.photos.length; i++) {
     var createElement = document.createElement('img');
     createElement.className = 'popup__photo';
-    createElement.setAttribute('src', array[0].offer.photos[i]);
+    createElement.setAttribute('src', obj.offer.photos[i]);
     createElement.setAttribute('width', '45');
     createElement.setAttribute('height', '40');
     createElement.setAttribute('alt', 'Фотография жилья');
@@ -146,22 +150,21 @@ var insertPhotos = function (array, cardNumber) {
 };
 
 // Функция создания карточки товара
-var createCard = function (array) {
-  createFeatures(items, CARD_NUNBER);
-  insertPhotos(items, CARD_NUNBER);
+var createCard = function (obj) {
+  createFeatures(object);
+  insertPhotos(object);
   var cardElement = cardTemplate.cloneNode(true);
-  cardElement.querySelector('.popup__title').textContent = array.offer.title;
-  cardElement.querySelector('.popup__text--address').textContent = array.offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = array.offer.price + '/ночь.';
+  cardElement.querySelector('.popup__title').textContent = obj.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = obj.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = obj.offer.price + '/ночь.';
   for (var key in typeHomes) {
-    if (array.offer.type === key) {
+    if (obj.offer.type === key) {
       cardElement.querySelector('.popup__type').textContent = typeHomes[key];
     }
   }
-  cardElement.querySelector('.popup__text--capacity').textContent = array.offer.rooms + ' комнаты для ' + array.offer.guests + ' гостей';
-  cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + array.offer.checkin + ' выезд до ' + array.offer.checkout;
-  cardElement.querySelector('.popup__description').textContent = array.offer.description;
-
+  cardElement.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + obj.offer.checkin + ' выезд до ' + obj.offer.checkout;
+  cardElement.querySelector('.popup__description').textContent = obj.offer.description;
   return cardElement;
 };
 
@@ -176,12 +179,11 @@ var insertPin = function (array) {
 var filtersContainer = document.querySelector('.map__filters-container');
 
 // Функция вставки карточек
-var insertCard = function (array, cardNumber) {
+var insertCard = function (obj) {
   var fragment = document.createDocumentFragment();
-  fragment.appendChild(createCard(array[cardNumber]));
+  fragment.appendChild(createCard(obj));
   map.insertBefore(fragment, filtersContainer);
 };
 
-var items = createItems(CARD_QUANTITY);
 insertPin(items);
-insertCard(items, CARD_NUNBER);
+insertCard(object);
