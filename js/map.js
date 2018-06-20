@@ -98,18 +98,41 @@ var createItems = function (number) {
 var items = createItems(CARD_QUANTITY);
 
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+var form = document.querySelector('.ad-form');
+
+var mapOpen = document.querySelector('.map__pin--main');
+
+// Функция активации карты, формы, вставки пинов
+var active = function () {
+  map.classList.remove('map--faded');
+  form.classList.remove('ad-form--disabled');
+  insertPin(items);
+
+};
+
+// Запуcкаем функцию активации по перетаскиванию
+mapOpen.addEventListener('mouseup', function () {
+  active();
+});
+
+// находим созданые пины и читаем их атрибуты
+// var button = document.querySelector('[data-id]');
+// var id = button.getAttribute('data-id');
+
+
 var template = document.querySelector('template');
 var pinTemplate = template.content.querySelector('.map__pin');
 var pins = document.querySelector('.map__pins');
 
 // Функция создания пинов
-var createPin = function (array) {
+var createPin = function (array, id) {
   var pinElement = pinTemplate.cloneNode(true);
   pinElement.style.left = array.location.x - PIN_WHIDTH / 2 + 'px';
   pinElement.style.top = array.location.y - PIN_HEIGHT + 'px';
+  pinElement.dataset.id = id;
   pinElement.querySelector('img').src = array.author.avatar;
   pinElement.querySelector('img').alt = array.offer.title;
+
   return pinElement;
 };
 var cardTemplate = template.content.querySelector('.map__card');
@@ -169,7 +192,7 @@ var createCard = function (obj) {
 var insertPin = function (array) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < array.length; i++) {
-    fragment.appendChild(createPin(array[i]));
+    fragment.appendChild(createPin(array[i], i));
   }
   pins.appendChild(fragment);
 };
@@ -182,5 +205,4 @@ var insertCard = function (obj) {
   map.insertBefore(fragment, filtersContainer);
 };
 
-insertPin(items);
 insertCard(items[CARD_NUMBER]);
