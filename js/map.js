@@ -154,6 +154,7 @@ var createCard = function (obj) {
   createFeatures(obj);
   insertPhotos(obj);
   var cardElement = cardTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__avatar').src = obj.author.avatar;
   cardElement.querySelector('.popup__title').textContent = obj.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = obj.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = obj.offer.price + ' ₽/ночь.';
@@ -212,8 +213,10 @@ var onClickMainPin = function () {
   mainPin.removeEventListener('mouseup', onClickMainPin);
 };
 
+
 // Ставим обработчик на главный пин. По событию mouseup - сработает функция onClickMainPin
 mainPin.addEventListener('mouseup', onClickMainPin);
+
 
 var mapPins = document.querySelector('.map__pins'); // область клика
 
