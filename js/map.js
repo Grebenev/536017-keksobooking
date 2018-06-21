@@ -100,26 +100,6 @@ var items = createItems(CARD_QUANTITY);
 var map = document.querySelector('.map');
 var form = document.querySelector('.ad-form');
 
-var mapOpen = document.querySelector('.map__pin--main');
-
-// Функция активации карты, формы, вставки пинов
-var active = function () {
-  map.classList.remove('map--faded');
-  form.classList.remove('ad-form--disabled');
-  insertPin(items);
-
-};
-
-// Запуcкаем функцию активации по перетаскиванию
-mapOpen.addEventListener('mouseup', function () {
-  active();
-});
-
-// находим созданые пины и читаем их атрибуты
-// var button = document.querySelector('[data-id]');
-// var id = button.getAttribute('data-id');
-
-
 var template = document.querySelector('template');
 var pinTemplate = template.content.querySelector('.map__pin');
 var pins = document.querySelector('.map__pins');
@@ -198,11 +178,58 @@ var insertPin = function (array) {
 };
 var filtersContainer = document.querySelector('.map__filters-container');
 
+// Функция удаления карточки
+var removeCard = function () {
+  var popupClose = map.querySelector('.popup__close');
+  popupClose.addEventListener('click', function () {
+    var childElement = map.querySelector('.map__card');
+    map.removeChild(childElement);
+  });
+};
+
 // Функция вставки карточек
 var insertCard = function (obj) {
   var fragment = document.createDocumentFragment();
   fragment.appendChild(createCard(obj));
   map.insertBefore(fragment, filtersContainer);
+  removeCard();
 };
 
-insertCard(items[CARD_NUMBER]);
+// ------------------------------------------------
+
+// Функция активации
+var activeMap = function () {
+  map.classList.remove('map--faded');
+  form.classList.remove('ad-form--disabled');
+  insertPin(items);
+};
+
+var mainPin = document.querySelector('.map__pin--main');
+
+// Создаем функцию, на которую повесим обработчик по mouseup и удалим из нее обработчик после срабатывания
+var onClickMainPin = function () {
+  activeMap();
+  mainPin.removeEventListener('mouseup', onClickMainPin);
+};
+
+// Ставим обработчик на главный пин. По событию mouseup - сработает функция onClickMainPin
+mainPin.addEventListener('mouseup', onClickMainPin);
+
+var mapPins = document.querySelector('.map__pins'); // область клика
+
+mapPins.addEventListener('click', function (evt) {
+  if (evt.target.dataset.id) {
+    insertCard(items[evt.target.dataset.id]);
+
+  } else if (evt.target.parentElement.dataset.id) {
+    insertCard(items[evt.target.parentElement.dataset.id]);
+  }
+});
+
+// передаем данные в инпут
+var mainPinWidth = mainPin.children[1].getAttribute('width');
+var mainPinHeight = mainPin.children[1].getAttribute('height');
+var mainPinX = mainPin.offsetLeft + Number(mainPinWidth) / 2;
+var mainPinY = mainPin.offsetTop + Number(mainPinHeight);
+var addressInput = document.querySelector('#address');
+addressInput.value = mainPinX + ',' + mainPinY;
