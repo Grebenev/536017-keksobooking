@@ -2,7 +2,6 @@
 
 var PIN_WHIDTH = 40;
 var PIN_HEIGHT = 40;
-var CARD_NUMBER = 0;
 var CARD_QUANTITY = 8;
 
 var titles = [
