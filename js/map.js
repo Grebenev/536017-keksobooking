@@ -189,10 +189,15 @@ var removeCard = function () {
 
 // Функция вставки карточек
 var insertCard = function (obj) {
-  var fragment = document.createDocumentFragment();
-  fragment.appendChild(createCard(obj));
-  map.insertBefore(fragment, filtersContainer);
-  removeCard();
+  var existCard = map.querySelector('.map__card');
+
+  // Проверка существует ли карточка
+  if (!existCard) {
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(createCard(obj));
+    map.insertBefore(fragment, filtersContainer);
+    removeCard();
+  }
 };
 
 // ------------------------------------------------
