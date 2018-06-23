@@ -181,10 +181,29 @@ var filtersContainer = document.querySelector('.map__filters-container');
 // Функция удаления карточки
 var removeCard = function () {
   var popupClose = map.querySelector('.popup__close');
-  popupClose.addEventListener('click', function () {
+
+  // Удаление элемента
+  var removeElement = function () {
     var childElement = map.querySelector('.map__card');
     map.removeChild(childElement);
-  });
+  };
+
+  // Удаление по клику
+  var onClickClose = function () {
+    removeElement();
+    popupClose.removeEventListener('click', onClickClose);
+  };
+
+  // Удаление по Esc
+  var onEscClose = function (evt) {
+    if (evt.keyCode === 27) {
+      removeElement();
+      document.removeEventListener('keydown', onEscClose);
+    }
+  };
+
+  popupClose.addEventListener('click', onClickClose);
+  document.addEventListener('keydown', onEscClose);
 };
 
 // Функция вставки карточек
@@ -199,8 +218,6 @@ var insertCard = function (obj) {
     removeCard();
   }
 };
-
-// ------------------------------------------------
 
 // Функция активации
 var activeMap = function () {
