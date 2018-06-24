@@ -257,3 +257,45 @@ var mainPinX = mainPin.offsetLeft + Number(mainPinWidth) / 2;
 var mainPinY = mainPin.offsetTop + Number(mainPinHeight);
 var addressInput = document.querySelector('#address');
 addressInput.value = mainPinX + ',' + mainPinY;
+
+// Форма
+var forms = document.querySelector('.ad-form');
+
+// Функция установки звездочки в текст с required
+var setStarsReuired = function (id) {
+  // var forValue = id;
+  var label = forms.querySelector('label[for="' + id + '"]');
+  if (label) {
+    var text = label.textContent;
+    label.textContent = text + ' *';
+  }
+
+};
+
+// Функция поиска и установки атрибутов
+var checkAttributes = function (id, attribute, value) {
+  var checkId = forms.querySelector('#' + id);
+  var checkAttr = checkId.getAttribute('attribute');
+
+  if (!checkAttr) {
+    checkId.setAttribute(attribute, value);
+  }
+  if (attribute === 'required') {
+    setStarsReuired(id);
+  }
+};
+
+// Перечень id инпутов для установки required
+var inputId = [
+  'title',
+  'address',
+  'type',
+  'price',
+  'timein',
+  'timeout',
+  'room_number',
+  'capacity'
+];
+for (var i = 0; i < inputId.length; i++) {
+  checkAttributes(inputId[i], 'required', '');
+}
