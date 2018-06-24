@@ -263,7 +263,7 @@ var forms = document.querySelector('.ad-form');
 
 // Функция установки звездочки в текст с required
 var setStarsReuired = function (id) {
-  // var forValue = id;
+
   var label = forms.querySelector('label[for="' + id + '"]');
   if (label) {
     var text = label.textContent;
@@ -272,29 +272,30 @@ var setStarsReuired = function (id) {
 
 };
 
-// Функция поиска и установки атрибутов
+// Функция поиска и установки атрибутов по id - инпута
 var checkAttributes = function (id, attribute, value) {
   var checkId = forms.querySelector('#' + id);
-  var checkAttr = checkId.getAttribute('attribute');
+  var checkAttr = checkId.attribute;
 
   if (!checkAttr) {
     checkId.setAttribute(attribute, value);
   }
+
+  // Вызывает функцию добавление звездочки  если параметр = required
   if (attribute === 'required') {
     setStarsReuired(id);
   }
 };
 
+// Установка атрибутов
+checkAttributes('title', 'minlength', '30');
+checkAttributes('title', 'maxlength', '100');
+checkAttributes('price', 'maxlength', '1000000');
+
 // Перечень id инпутов для установки required
 var inputId = [
   'title',
-  'address',
-  'type',
-  'price',
-  'timein',
-  'timeout',
-  'room_number',
-  'capacity'
+  'price'
 ];
 for (var i = 0; i < inputId.length; i++) {
   checkAttributes(inputId[i], 'required', '');
