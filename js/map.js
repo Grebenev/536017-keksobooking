@@ -179,20 +179,15 @@ var insertPin = function (array) {
 var filtersContainer = document.querySelector('.map__filters-container');
 
 
-
-
-
-
-
 // Функция удаления карточки
 var removeCard = function () {
   var popups = map.querySelectorAll('.popup__close');
-  var lastPopup = popups[popups.length - 1]
+  var lastPopup = popups[popups.length - 1];
 
-  // Удаление элемента
+  // Удаление последнего элемента
   var removeElement = function () {
-    var childElement = map.querySelectorAll('.map__card');
-    map.removeChild(childElement[childElement.length - 1]);
+    var elements = map.querySelectorAll('.map__card');
+    map.removeChild(elements[elements.length - 1]);
   };
 
   // Удаление по клику
@@ -205,12 +200,12 @@ var removeCard = function () {
   var onEscClose = function (evt) {
     if (evt.keyCode === 27) {
       removeElement();
-      // document.removeEventListener('keydown', onEscClose);
+      document.removeEventListener('keydown', onEscClose);
     }
   };
 
   lastPopup.addEventListener('click', onClickClose);
-  map.addEventListener('keydown', onEscClose);
+  document.addEventListener('keydown', onEscClose);
 };
 
 // Функция вставки карточек
@@ -328,10 +323,6 @@ forms.addEventListener('click', function (evt) {
       checkAttributes('price', 'minlength', '10000');
       checkAttributes('price', 'placeholder', '10000');
     }
-
-    { console.log('Выбран селект: индекс = ' + index + ' значение ' + evtTarget[index].value);}
-  } else {
-    console.log('Выбран не селекст ');
   }
 
 });
