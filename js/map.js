@@ -178,45 +178,47 @@ var insertPin = function (array) {
 };
 var filtersContainer = document.querySelector('.map__filters-container');
 
+
+
+
+
+
+
 // Функция удаления карточки
 var removeCard = function () {
-  var popupClose = map.querySelector('.popup__close');
+  var popups = map.querySelectorAll('.popup__close');
+  var lastPopup = popups[popups.length - 1]
 
   // Удаление элемента
   var removeElement = function () {
-    var childElement = map.querySelector('.map__card');
-    map.removeChild(childElement);
+    var childElement = map.querySelectorAll('.map__card');
+    map.removeChild(childElement[childElement.length - 1]);
   };
 
   // Удаление по клику
   var onClickClose = function () {
     removeElement();
-    popupClose.removeEventListener('click', onClickClose);
+    lastPopup.removeEventListener('click', onClickClose);
   };
 
   // Удаление по Esc
   var onEscClose = function (evt) {
     if (evt.keyCode === 27) {
       removeElement();
-      document.removeEventListener('keydown', onEscClose);
+      // document.removeEventListener('keydown', onEscClose);
     }
   };
 
-  popupClose.addEventListener('click', onClickClose);
-  document.addEventListener('keydown', onEscClose);
+  lastPopup.addEventListener('click', onClickClose);
+  map.addEventListener('keydown', onEscClose);
 };
 
 // Функция вставки карточек
 var insertCard = function (obj) {
-  var existCard = map.querySelector('.map__card');
-
-  // Проверка существует ли карточка
-  if (!existCard) {
-    var fragment = document.createDocumentFragment();
-    fragment.appendChild(createCard(obj));
-    map.insertBefore(fragment, filtersContainer);
-    removeCard();
-  }
+  var fragment = document.createDocumentFragment();
+  fragment.appendChild(createCard(obj));
+  map.insertBefore(fragment, filtersContainer);
+  removeCard();
 };
 
 // Функция активации
