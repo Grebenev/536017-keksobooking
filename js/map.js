@@ -275,9 +275,10 @@ var setStarsReuired = function (id) {
 // Функция поиска и установки атрибутов по id - инпута
 var checkAttributes = function (id, attribute, value) {
   var checkId = forms.querySelector('#' + id);
-  var checkAttr = checkId.attribute;
+  // var checkAttr = checkId.attribute;
 
-  if (!checkAttr) {
+  // Проверяет присутствие  атрибута
+  if (!checkId.attribute) {
     checkId.setAttribute(attribute, value);
   }
 
@@ -300,3 +301,35 @@ var inputId = [
 for (var i = 0; i < inputId.length; i++) {
   checkAttributes(inputId[i], 'required', '');
 }
+
+// тест
+
+// var select = forms.querySelector('#type');
+
+forms.addEventListener('click', function (evt) {
+  if (evt.target.querySelector('option')) {
+    var evtTarget = evt.target.options;
+    var index = evtTarget.selectedIndex;
+    if (evtTarget[index].value === 'bungalo') {
+      checkAttributes('price', 'minlength', '0');
+      checkAttributes('price', 'placeholder', '0');
+
+    } else if (evtTarget[index].value === 'flat') {
+      checkAttributes('price', 'minlength', '1000');
+      checkAttributes('price', 'placeholder', '1000');
+
+    } else if (evtTarget[index].value === 'house') {
+      checkAttributes('price', 'minlength', '5000');
+      checkAttributes('price', 'placeholder', '5000');
+
+    } else if (evtTarget[index].value === 'palace') {
+      checkAttributes('price', 'minlength', '10000');
+      checkAttributes('price', 'placeholder', '10000');
+    }
+
+    { console.log('Выбран селект: индекс = ' + index + ' значение ' + evtTarget[index].value);}
+  } else {
+    console.log('Выбран не селекст ');
+  }
+
+});
