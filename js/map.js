@@ -178,51 +178,30 @@ var insertPin = function (array) {
 };
 var filtersContainer = document.querySelector('.map__filters-container');
 
-
-// Функция удаления карточки, запускается сразу после вставки карточки
+// Функция удаления карточки
 var removeCard = function () {
-  var closeButton = map.querySelector('.popup__close');
-
-  // Удаление последнего элемента
-  var removeElement = function () {
-    var element = map.querySelector('.map__card');
-    map.removeChild(element);
-  };
-
-  // Удаление по клику
-  var onClickClose = function () {
-    removeElement();
-    closeButton.removeEventListener('click', onClickClose);
-  };
-
-  // Удаление по Esc
-  var onEscClose = function (evt) {
-    if (evt.keyCode === 27) {
-      removeElement();
-      document.removeEventListener('keydown', onEscClose);
-    }
-  };
-
-  closeButton.addEventListener('click', onClickClose);
-  document.addEventListener('keydown', onEscClose);
+  var card = map.querySelector('.map__card');
+  if (card) {
+    map.removeChild(card);
+  }
 };
 
-// Функция вставки карточек
+// Функция вставки карточки
 var insertCard = function (obj) {
-
-  // Удаляем  article, если существует
-  var existCard = map.querySelector('.map__card');
-  if (existCard) {
-    existCard.remove();
-  }
-
+  removeCard();
   var fragment = document.createDocumentFragment();
   fragment.appendChild(createCard(obj));
   map.insertBefore(fragment, filtersContainer);
-  removeCard();
 };
 
-// Функция активации
+// Удаление карточки по Esc
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === 27) {
+    removeCard();
+  }
+});
+
+// Функция активации карты и формы
 var activeMap = function () {
   map.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
@@ -231,20 +210,18 @@ var activeMap = function () {
 
 var mainPin = document.querySelector('.map__pin--main');
 
-// Создаем функцию, на которую повесим обработчик по mouseup и удалим из нее обработчик после срабатывания
 var onClickMainPin = function () {
   activeMap();
   mainPin.removeEventListener('mouseup', onClickMainPin);
 };
 
-
-// Ставим обработчик на главный пин. По событию mouseup - сработает функция onClickMainPin
 mainPin.addEventListener('mouseup', onClickMainPin);
 
+map.addEventListener('click', function (evt) {
+  if (evt.target.className === 'popup__close') {
+    removeCard();
+  }
 
-var mapPins = document.querySelector('.map__pins'); // область клика
-
-mapPins.addEventListener('click', function (evt) {
   if (evt.target.dataset.id) {
     insertCard(items[evt.target.dataset.id]);
 
