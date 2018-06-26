@@ -179,21 +179,21 @@ var insertPin = function (array) {
 var filtersContainer = document.querySelector('.map__filters-container');
 
 
-// Функция удаления карточки
+// Функция удаления карточки, запускается сразу после вставки карточки
 var removeCard = function () {
-  var popups = map.querySelectorAll('.popup__close');
-  var lastPopup = popups[popups.length - 1];
+  var closeButtons = map.querySelectorAll('.popup__close'); // 1 находит все кнопки Х -закрыть
+  var lastСloseButton = closeButtons[closeButtons.length - 1]; // 2 выбирает последнюю кнопку
 
   // Удаление последнего элемента
   var removeElement = function () {
-    var elements = map.querySelectorAll('.map__card');
-    map.removeChild(elements[elements.length - 1]);
+    var elements = map.querySelectorAll('.map__card'); // 6 ищет все карточки
+    map.removeChild(elements[elements.length - 1]); // 7 удаляет последнюю
   };
 
   // Удаление по клику
-  var onClickClose = function () {
-    removeElement();
-    lastPopup.removeEventListener('click', onClickClose);
+  var onClickClose = function () { // 4 срабатывает при клике
+    removeElement(); // 5 запускает функцию
+    lastСloseButton.removeEventListener('click', onClickClose); // 5 удаляет обработчик
   };
 
   // Удаление по Esc
@@ -204,7 +204,7 @@ var removeCard = function () {
     }
   };
 
-  lastPopup.addEventListener('click', onClickClose);
+  lastСloseButton.addEventListener('click', onClickClose); // 3 слушает последнюю кнопку
   document.addEventListener('keydown', onEscClose);
 };
 
@@ -272,7 +272,6 @@ var setStarsReuired = function (id) {
 // Функция поиска и установки атрибутов по id - инпута
 var checkAttributes = function (id, attribute, value) {
   var checkId = forms.querySelector('#' + id);
-  // var checkAttr = checkId.attribute;
 
   // Проверяет присутствие  атрибута
   if (!checkId.attribute) {
