@@ -181,19 +181,18 @@ var filtersContainer = document.querySelector('.map__filters-container');
 
 // Функция удаления карточки, запускается сразу после вставки карточки
 var removeCard = function () {
-  var closeButtons = map.querySelectorAll('.popup__close'); // 1 находит все кнопки Х -закрыть
-  var lastСloseButton = closeButtons[closeButtons.length - 1]; // 2 выбирает последнюю кнопку
+  var closeButton = map.querySelector('.popup__close');
 
   // Удаление последнего элемента
   var removeElement = function () {
-    var elements = map.querySelectorAll('.map__card'); // 6 ищет все карточки
-    map.removeChild(elements[elements.length - 1]); // 7 удаляет последнюю
+    var element = map.querySelector('.map__card');
+    map.removeChild(element);
   };
 
   // Удаление по клику
-  var onClickClose = function () { // 4 срабатывает при клике
-    removeElement(); // 5 запускает функцию
-    lastСloseButton.removeEventListener('click', onClickClose); // 5 удаляет обработчик
+  var onClickClose = function () {
+    removeElement();
+    closeButton.removeEventListener('click', onClickClose);
   };
 
   // Удаление по Esc
@@ -204,12 +203,19 @@ var removeCard = function () {
     }
   };
 
-  lastСloseButton.addEventListener('click', onClickClose); // 3 слушает последнюю кнопку
+  closeButton.addEventListener('click', onClickClose);
   document.addEventListener('keydown', onEscClose);
 };
 
 // Функция вставки карточек
 var insertCard = function (obj) {
+
+  // Удаляем  article, если существует
+  var existCard = map.querySelector('.map__card');
+  if (existCard) {
+    existCard.remove();
+  }
+
   var fragment = document.createDocumentFragment();
   fragment.appendChild(createCard(obj));
   map.insertBefore(fragment, filtersContainer);
