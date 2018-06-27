@@ -271,6 +271,7 @@ var checkAttributes = function (id, attribute, value) {
 checkAttributes('title', 'minlength', '30');
 checkAttributes('title', 'maxlength', '100');
 checkAttributes('price', 'maxlength', '1000000');
+checkAttributes('address', 'disabled', '');
 
 // Перечень id инпутов для установки required
 var inputId = [
@@ -281,14 +282,13 @@ for (var i = 0; i < inputId.length; i++) {
   checkAttributes(inputId[i], 'required', '');
 }
 
-// тест
-
-// var select = forms.querySelector('#type');
 
 forms.addEventListener('click', function (evt) {
   if (evt.target.querySelector('option')) {
     var evtTarget = evt.target.options;
     var index = evtTarget.selectedIndex;
+
+    // Тип жилья и цена
     if (evtTarget[index].value === 'bungalo') {
       checkAttributes('price', 'minlength', '0');
       checkAttributes('price', 'placeholder', '0');
@@ -304,6 +304,26 @@ forms.addEventListener('click', function (evt) {
     } else if (evtTarget[index].value === 'palace') {
       checkAttributes('price', 'minlength', '10000');
       checkAttributes('price', 'placeholder', '10000');
+    }
+
+    // Время заезда и выезда
+    var timeIn = forms.querySelector('#timein');
+    var timeOut = forms.querySelector('#timeout');
+
+    // Если событие при клике возвращает 14:00
+    if (evtTarget[index].value === '14:00') {
+
+      var parentId = evtTarget[index].parentElement.id;
+
+      // Если родитель timein
+      if (parentId === 'timein') {
+
+        timeOut.options[2].selected = 'true';
+      }
+      if (parentId === 'timeout') {
+
+        timeIn.options[2].selected = 'true';
+      }
     }
   }
 
