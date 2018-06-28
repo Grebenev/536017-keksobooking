@@ -2,6 +2,8 @@
 
 var PIN_WHIDTH = 40;
 var PIN_HEIGHT = 40;
+var MAIN_PIN_WIDTH = 156;
+var MAIN_PIN_HEIGHT = 200;
 var CARD_QUANTITY = 8;
 
 var titles = [
@@ -230,101 +232,94 @@ map.addEventListener('click', function (evt) {
   }
 });
 
-// передаем данные в инпут
-var mainPinWidth = mainPin.children[1].getAttribute('width');
-var mainPinHeight = mainPin.children[1].getAttribute('height');
-var mainPinX = mainPin.offsetLeft + Number(mainPinWidth) / 2;
-var mainPinY = mainPin.offsetTop + Number(mainPinHeight);
+var mainPinX = mainPin.offsetLeft + Number(MAIN_PIN_WIDTH) / 2;
+var mainPinY = mainPin.offsetTop + Number(MAIN_PIN_HEIGHT);
 var addressInput = document.querySelector('#address');
 addressInput.value = mainPinX + ',' + mainPinY;
 
 // Форма
 var forms = document.querySelector('.ad-form');
+var roomNumber = forms.querySelector('#room_number');
+var capacity = forms.querySelector('#capacity');
 
-// Функция установки звездочки в текст с required
-var setStarsReuired = function (id) {
 
-  var label = forms.querySelector('label[for="' + id + '"]');
-  if (label) {
-    var text = label.textContent;
-    label.textContent = text + ' *';
+// Функция комнаты/гости
+var setRooms = function (guest) {
+  for (var i = 0; i < 4; i++) {
+    capacity.options[i].disabled = true;
   }
 
-};
+  var obj = {
+    1: [1],
+    2: [1, 2],
+    3: [1, 2, 3],
+    100: [0]
+  };
 
-// Функция поиска и установки атрибутов по id - инпута
-var checkAttributes = function (id, attribute, value) {
-  var checkId = forms.querySelector('#' + id);
+  for (var key in obj) { // листаем ключи в объекте
 
-  // Проверяет присутствие  атрибута
-  if (!checkId.attribute) {
-    checkId.setAttribute(attribute, value);
-  }
+    if (key === guest) { // если ключ равен параметру
 
-  // Вызывает функцию добавление звездочки  если параметр = required
-  if (attribute === 'required') {
-    setStarsReuired(id);
-  }
-};
+      for (var n = 0; n < obj[key].length; n++) { // листаем массив в этом ключе
 
-// Установка атрибутов
-checkAttributes('title', 'minlength', '30');
-checkAttributes('title', 'maxlength', '100');
-checkAttributes('price', 'maxlength', '1000000');
-checkAttributes('address', 'disabled', '');
+        var indexGuest = obj[key][n]; // присваиваем массив переменной
 
-// Перечень id инпутов для установки required
-var inputId = [
-  'title',
-  'price'
-];
-for (var i = 0; i < inputId.length; i++) {
-  checkAttributes(inputId[i], 'required', '');
-}
+        for (var key2 in capacity.options) { // листаем option в capacity
 
-
-forms.addEventListener('click', function (evt) {
-  if (evt.target.querySelector('option')) {
-    var evtTarget = evt.target.options;
-    var index = evtTarget.selectedIndex;
-
-    // Тип жилья и цена
-    if (evtTarget[index].value === 'bungalo') {
-      checkAttributes('price', 'minlength', '0');
-      checkAttributes('price', 'placeholder', '0');
-
-    } else if (evtTarget[index].value === 'flat') {
-      checkAttributes('price', 'minlength', '1000');
-      checkAttributes('price', 'placeholder', '1000');
-
-    } else if (evtTarget[index].value === 'house') {
-      checkAttributes('price', 'minlength', '5000');
-      checkAttributes('price', 'placeholder', '5000');
-
-    } else if (evtTarget[index].value === 'palace') {
-      checkAttributes('price', 'minlength', '10000');
-      checkAttributes('price', 'placeholder', '10000');
-    }
-
-    // Время заезда и выезда
-    var timeIn = forms.querySelector('#timein');
-    var timeOut = forms.querySelector('#timeout');
-
-    // Если событие при клике возвращает 14:00
-    if (evtTarget[index].value === '14:00') {
-
-      var parentId = evtTarget[index].parentElement.id;
-
-      // Если родитель timein
-      if (parentId === 'timein') {
-
-        timeOut.options[2].selected = 'true';
-      }
-      if (parentId === 'timeout') {
-
-        timeIn.options[2].selected = 'true';
+          if (Number(capacity.options[key2].value) === indexGuest) {
+            capacity.options[key2].disabled = false;
+          }
+        }
       }
     }
   }
+};
 
+
+// Функция установка атрибутов для PRICE/
+var obj = {
+  bungalo: '0',
+  flat: '1000',
+  house: '5000',
+  palace: '10000'
+};
+
+var setMinPrice = function (type) {
+  var price = forms.querySelector('#price');
+  for (var key in obj) {
+    if (key === type) {
+      price.placeholder = obj[key];
+      price.min = obj[key];
+    }
+  }
+};
+
+// Функция timein/timeout
+var setTimeinOut = function (time, value) {
+  var timein = forms.querySelector('#timein');
+  var timeout = forms.querySelector('#timeout');
+  if (time === 'timein') {
+    timeout.options[value].selected = true;
+  }
+  if (time === 'timeout') {
+    timein.options[value].selected = true;
+  }
+};
+
+// Слушаем селектор type
+var typeHome = forms.querySelector('#type');
+typeHome.addEventListener('change', function (evt) {
+  setMinPrice(evt.target.value);
+});
+
+// Слушаем id timein/timeoute
+var time = forms.querySelector('.ad-form__element--time');
+
+time.addEventListener('change', function (evt) {
+  setTimeinOut(evt.target.id, evt.target.options.selectedIndex);
+});
+
+// Слушаем id room_number
+roomNumber.addEventListener('change', function (evt) {
+  setRooms(evt.target.value);
 });
