@@ -241,10 +241,15 @@ addressInput.value = mainPinX + ',' + mainPinY;
 var forms = document.querySelector('.ad-form');
 var roomNumber = forms.querySelector('#room_number');
 var capacity = forms.querySelector('#capacity');
+var typeHome = forms.querySelector('#type');
+var time = forms.querySelector('.ad-form__element--time');
+var title = forms.querySelector('#title');
+var price = forms.querySelector('#price');
 
 
 // Функция комнаты/гости
 var setRooms = function (guest) {
+
   for (var i = 0; i < 4; i++) {
     capacity.options[i].disabled = true;
   }
@@ -256,18 +261,20 @@ var setRooms = function (guest) {
     100: [0]
   };
 
-  for (var key in obj) { // листаем ключи в объекте
+  for (var key in obj) {
 
-    if (key === guest) { // если ключ равен параметру
+    if (key === guest) {
 
-      for (var n = 0; n < obj[key].length; n++) { // листаем массив в этом ключе
+      for (var n = 0; n < obj[key].length; n++) {
 
-        var indexGuest = obj[key][n]; // присваиваем массив переменной
+        var indexGuest = obj[key][n];
 
-        for (var key2 in capacity.options) { // листаем option в capacity
+        for (var key2 in capacity.options) {
 
           if (Number(capacity.options[key2].value) === indexGuest) {
             capacity.options[key2].disabled = false;
+            // capacity.options.selectedIndex = guest;
+
           }
         }
       }
@@ -275,17 +282,14 @@ var setRooms = function (guest) {
   }
 };
 
-
 // Функция установка атрибутов для PRICE/
-var obj = {
-  bungalo: '0',
-  flat: '1000',
-  house: '5000',
-  palace: '10000'
-};
-
 var setMinPrice = function (type) {
-  var price = forms.querySelector('#price');
+  var obj = {
+    bungalo: '0',
+    flat: '1000',
+    house: '5000',
+    palace: '10000'
+  };
   for (var key in obj) {
     if (key === type) {
       price.placeholder = obj[key];
@@ -295,26 +299,26 @@ var setMinPrice = function (type) {
 };
 
 // Функция timein/timeout
-var setTimeinOut = function (time, value) {
+var setTimeinOut = function (times, value) {
   var timein = forms.querySelector('#timein');
   var timeout = forms.querySelector('#timeout');
-  if (time === 'timein') {
+  if (times === 'timein') {
     timeout.options[value].selected = true;
   }
-  if (time === 'timeout') {
+  if (times === 'timeout') {
     timein.options[value].selected = true;
   }
 };
 
+// Функция валидации -------------------------------------------
+
+
 // Слушаем селектор type
-var typeHome = forms.querySelector('#type');
 typeHome.addEventListener('change', function (evt) {
   setMinPrice(evt.target.value);
 });
 
 // Слушаем id timein/timeoute
-var time = forms.querySelector('.ad-form__element--time');
-
 time.addEventListener('change', function (evt) {
   setTimeinOut(evt.target.id, evt.target.options.selectedIndex);
 });
@@ -322,4 +326,23 @@ time.addEventListener('change', function (evt) {
 // Слушаем id room_number
 roomNumber.addEventListener('change', function (evt) {
   setRooms(evt.target.value);
+});
+
+
+forms.addEventListener('change', function () {
+  // title.validity.valid === false ? title.style.border = '5px solid red' : title.style = false;
+  // price.validity.valid === false ? price.style.border = '5px solid red' : price.style = false;
+
+  if (title.validity.valid === false) {
+    title.style.border = '5px solid red';
+  } else {
+    title.style = false;
+  }
+
+  if (price.validity.valid === false) {
+    price.style.border = '5px solid red';
+  } else {
+    price.style = false;
+  }
+
 });
