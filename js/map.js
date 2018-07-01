@@ -242,12 +242,11 @@ addressInput.value = mainPinX + ',' + mainPinY;
 // Форма
 var forms = document.querySelector('.ad-form');
 var capacity = forms.querySelector('#capacity');
-var title = forms.querySelector('#title');
+// var title = forms.querySelector('#title');
 var price = forms.querySelector('#price');
 var room = forms.querySelector('#room_number');
 var timein = forms.querySelector('#timein');
 var timeout = forms.querySelector('#timeout');
-var button = forms.querySelector('.ad-form__submit');
 
 
 var roomsObj = {
@@ -313,49 +312,41 @@ var changeValue = function (id, value) {
   }
 };
 
+// установка бордера
+var setBorderRed = function (id) {
+  var param = forms.querySelector('#' + id);
+  if (!param.validity.valid) {
+    param.style.border = '5px solid red';
+  } else {
+    param.style.border = '';
+  }
+};
+
 // Слушаем форму вызываем функцию
 forms.addEventListener('change', function (evt) {
   changeValue(evt.target.id, evt.target.value);
-  validRooms();
-  setBorderRed(price);
+  validRooms(evt.target.id);
+
+});
+forms.addEventListener('input', function (evt) {
+  setBorderRed(evt.target.id);
 });
 
 // Валидация
-
-// Проверка формы по клику
-button.addEventListener('click', function () {
-  var checkForm = forms.checkValidity();
-
-  if (checkForm === false) {
-    setBorderRed(title);
-    setBorderRed(price);
-
-    // проверка заголовка 30-100 символов
-    title.addEventListener('keydown', function () {
-      setBorderRed(title);
-    });
-  }
+forms.addEventListener('submit', function () {
+  setBorderRed('title');
   validRooms();
 });
 
-
-var validRooms = function () {
+var validRooms = function (id) {
 
   var roomQuantity = room.options[room.selectedIndex].value;
   var guestQuantity = capacity.options[capacity.selectedIndex].value;
   var resultRoom = roomsObj[Number(roomQuantity)].indexOf(Number(guestQuantity));
   if (resultRoom === -1) {
     capacity.style.border = '5px solid red';
+    event.preventDefault();
   } else {
-    capacity.style = false;
-  }
-};
-
-// установка бордера
-var setBorderRed = function (id) {
-  if (id.validity.valid === false) {
-    id.style.border = '5px solid red';
-  } else {
-    id.style = false;
+    capacity.style.border = '';
   }
 };
