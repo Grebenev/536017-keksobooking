@@ -242,11 +242,12 @@ addressInput.value = mainPinX + ',' + mainPinY;
 // Форма
 var forms = document.querySelector('.ad-form');
 var capacity = forms.querySelector('#capacity');
-// var title = forms.querySelector('#title');
+var title = forms.querySelector('#title');
 var price = forms.querySelector('#price');
 var room = forms.querySelector('#room_number');
 var timein = forms.querySelector('#timein');
 var timeout = forms.querySelector('#timeout');
+var button = forms.querySelector('.ad-form__submit');
 
 
 var roomsObj = {
@@ -267,11 +268,14 @@ var priceObj = {
 var changeValue = function (id, value) {
 
   // Комнаты-гости
+
   if (id === 'room_number') {
+
+    // установка disable всем селектам в 'количество мест'
     for (var i = 0; i < 4; i++) {
       capacity.options[i].disabled = true;
     }
-
+    // снимаем disable в зависимости от значений ключей объекта roomsObj
     for (var key in roomsObj) {
       if (key === value) {
         for (var n = 0; n < roomsObj[key].length; n++) {
@@ -312,41 +316,42 @@ var changeValue = function (id, value) {
   }
 };
 
-// установка бордера
-var setBorderRed = function (id) {
-  var param = forms.querySelector('#' + id);
-  if (!param.validity.valid) {
-    param.style.border = '5px solid red';
-  } else {
-    param.style.border = '';
-  }
-};
 
-// Слушаем форму вызываем функцию
+// Слушаем форму по change
 forms.addEventListener('change', function (evt) {
   changeValue(evt.target.id, evt.target.value);
-  validRooms(evt.target.id);
-
-});
-forms.addEventListener('input', function (evt) {
-  setBorderRed(evt.target.id);
 });
 
-// Валидация
-forms.addEventListener('submit', function () {
-  setBorderRed('title');
-  validRooms();
+
+// 1
+title.addEventListener('input', function () {
+
+  if (!title.validity.valid) {
+    title.style.border = '5px solid red';
+  } else {
+    title.style.border = '';
+  }
 });
 
-var validRooms = function (id) {
+
+// 2
+price.addEventListener('input', function () {
+
+  if (!price.validity.valid) {
+    price.style.border = '5px solid red';
+  } else {
+    price.style.border = '';
+  }
+});
+
+forms.addEventListener('submit', function (evt) {
 
   var roomQuantity = room.options[room.selectedIndex].value;
   var guestQuantity = capacity.options[capacity.selectedIndex].value;
   var resultRoom = roomsObj[Number(roomQuantity)].indexOf(Number(guestQuantity));
   if (resultRoom === -1) {
+    evt.preventDefault();
     capacity.style.border = '5px solid red';
-    event.preventDefault();
-  } else {
     capacity.style.border = '';
   }
-};
+});
