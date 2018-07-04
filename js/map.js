@@ -232,30 +232,62 @@ var addressInput = document.querySelector('#address');
 addressInput.value = mainPinX + ',' + mainPinY;
 
 // Форма
+var forms = document.querySelector('.ad-form');
 
 // Функция активации карты и формы
 var activeMap = function () {
   map.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
-  disableFieldsets('on');
+  disableFieldsets('off');
   insertPin(items);
 };
 
-// Дизаблим филдссеты
-var forms = document.querySelector('.ad-form');
-
+// Дизаблим филдсеты
 var disableFieldsets = function (swich) {
   var fieldsets = forms.querySelectorAll('fieldset');
   for (var i = 0; i < fieldsets.length; i++) {
     if (swich === 'off') {
-      fieldsets[i].disabled = true;
+      fieldsets[i].disabled = false;
     }
     if (swich === 'on') {
-      fieldsets[i].disabled = false;
+      fieldsets[i].disabled = true;
     }
   }
 };
-disableFieldsets('off');
+disableFieldsets('on');
+
+// Сброс
+var reset = document.querySelector('.ad-form__reset');
+
+var onFormReset = function () {
+  // Удаление пинов
+  var mapPins = map.querySelectorAll('.map__pin');
+
+  for (var i = 1; i < mapPins.length; i++) {
+    mapPins[i].parentNode.removeChild(mapPins[i]);
+  }
+
+  map.classList.add('map--faded');
+  form.classList.add('ad-form--disabled');
+
+  // сброс слушателей
+  title.removeEventListener('invalid', onTitleInvalid);
+  title.removeEventListener('input', onTitleInvalid);
+  price.removeEventListener('invalid', onPriceInvalid);
+  price.removeEventListener('input', onPriceInvalid);
+  room.removeEventListener('change', onCapacityChange);
+  capacity.removeEventListener('change', onCapacityChange);
+  timein.removeEventListener('change', onTimeinChange);
+  timeout.removeEventListener('change', onTimeoutChange);
+  type.removeEventListener('change', onTypeChange);
+  button.removeEventListener('click', onCapacityChange);
+  reset.removeEventListener('click', onFormReset);
+
+  disableFieldsets('on');
+
+  // Возврат слушателя глав-пина
+  mainPin.addEventListener('mouseup', onClickMainPin);
+};
 
 var capacity = forms.querySelector('#capacity');
 var title = forms.querySelector('#title');
@@ -264,7 +296,7 @@ var price = forms.querySelector('#price');
 var room = forms.querySelector('#room_number');
 var timein = forms.querySelector('#timein');
 var timeout = forms.querySelector('#timeout');
-// var button = forms.querySelector('.ad-form__submit');
+var button = forms.querySelector('.ad-form__submit');
 
 
 var roomsObj = {
@@ -281,98 +313,65 @@ var priceObj = {
   palace: '10000'
 };
 
-// БОРДЕР SET
 var setBorder = function (id) {
   id.style.border = '5px solid red';
 };
 
-// БОРДЕР REMOVE
 var removeBorder = function (id) {
   id.style.border = '';
 };
 
-// ВАЛИД
 var checkValiation = function (id) {
-
   if (!id.validity.valid) {
     setBorder(id);
   } else {
     removeBorder(id);
   }
-
 };
 
+var onTitleInvalid = function () {
+  checkValiation(title);
+};
+title.addEventListener('invalid', onTitleInvalid);
+title.addEventListener('input', onTitleInvalid);
 
-// Функция КОМНАТЫ-ГОСТИ
-var setCapacity = function () {
+var onPriceInvalid = function () {
+  checkValiation(price);
+};
+price.addEventListener('invalid', onPriceInvalid);
+price.addEventListener('input', onPriceInvalid);
 
+
+var onCapacityChange = function () {
   var rooms = Number(room.options[room.selectedIndex].value);
   var guests = Number(capacity.options[capacity.selectedIndex].value);
   if (roomsObj[rooms].indexOf(guests) === -1) {
-
     setBorder(capacity);
     capacity.setCustomValidity('Указанное количество мест не соответствует выбранному количеству комнат');
   } else {
-
     removeBorder(capacity);
     capacity.setCustomValidity('');
   }
 };
+room.addEventListener('change', onCapacityChange);
+capacity.addEventListener('change', onCapacityChange);
+button.addEventListener('click', onCapacityChange);
 
-// Функция ПРАЙС
-var setPrice = function (value) {
-  price.min = priceObj[value];
-  price.placeholder = priceObj[value];
+
+var onTimeinChange = function () {
+  timeout.options.selectedIndex = timein.options.selectedIndex;
 };
-
-// Функция ВРЕМЯ
-var setTime = function (value) {
-  timein.options.selectedIndex = value;
-  timeout.options.selectedIndex = value;
+var onTimeoutChange = function () {
+  timein.options.selectedIndex = timeout.options.selectedIndex;
 };
+timein.addEventListener('change', onTimeinChange);
+timeout.addEventListener('change', onTimeoutChange);
 
 
-title.addEventListener('invalid', function () {
-  checkValiation(title);
+var onTypeChange = function () {
+  price.min = priceObj[type.options[type.selectedIndex].value];
+  price.placeholder = priceObj[type.options[type.selectedIndex].value];
+};
+type.addEventListener('change', onTypeChange);
 
-});
-
-title.addEventListener('input', function () {
-  checkValiation(title);
-
-});
-
-price.addEventListener('invalid', function () {
-  checkValiation(price);
-});
-
-
-price.addEventListener('input', function () {
-  checkValiation(price);
-});
-
-
-// Слушаем ROOM
-room.addEventListener('change', function () {
-  setCapacity();
-});
-
-// Слушаем CAPACITY
-capacity.addEventListener('change', function () {
-  setCapacity();
-});
-
-// Слушаем TYPE
-type.addEventListener('change', function () {
-  setPrice(type.options[type.selectedIndex].value);
-});
-
-// Слушаем TIME-IN
-timein.addEventListener('change', function () {
-  setTime(timein.options.selectedIndex);
-});
-
-// Слушаем TIME-OUT
-timeout.addEventListener('change', function () {
-  setTime(timeout.options.selectedIndex);
-});
+reset.addEventListener('click', onFormReset);
