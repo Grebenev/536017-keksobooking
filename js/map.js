@@ -322,11 +322,7 @@ var removeBorder = function (id) {
 };
 
 var checkValiation = function (id) {
-  if (!id.validity.valid) {
-    setBorder(id);
-  } else {
-    removeBorder(id);
-  }
+  return !id.validity.valid ? setBorder(id) : removeBorder(id);
 };
 
 var onTitleInvalid = function () {
