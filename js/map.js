@@ -226,21 +226,17 @@ map.addEventListener('click', function (evt) {
   }
 });
 
-var mainPinX = mainPin.offsetLeft + Number(MAIN_PIN_WIDTH) / 2;
-var mainPinY = mainPin.offsetTop + Number(MAIN_PIN_HEIGHT);
-var addressInput = document.querySelector('#address');
-addressInput.value = mainPinX + ',' + mainPinY;
+var setAddress = function ()  {
+  var mainPinX = mainPin.offsetLeft + Number(MAIN_PIN_WIDTH) / 2;
+  var mainPinY = mainPin.offsetTop + Number(MAIN_PIN_HEIGHT);
+  var addressInput = document.querySelector('#address');
+  addressInput.value = mainPinX + ',' + mainPinY;
+};
+
 
 // Форма
 var forms = document.querySelector('.ad-form');
 
-// Функция активации карты и формы
-var activeMap = function () {
-  map.classList.remove('map--faded');
-  form.classList.remove('ad-form--disabled');
-  disableFieldsets('off');
-  insertPin(items);
-};
 
 // Дизаблим филдсеты
 var disableFieldsets = function (swich) {
@@ -256,38 +252,6 @@ var disableFieldsets = function (swich) {
 };
 disableFieldsets('on');
 
-// Сброс
-var reset = document.querySelector('.ad-form__reset');
-
-var onFormReset = function () {
-  // Удаление пинов
-  var mapPins = map.querySelectorAll('.map__pin');
-
-  for (var i = 1; i < mapPins.length; i++) {
-    mapPins[i].parentNode.removeChild(mapPins[i]);
-  }
-
-  map.classList.add('map--faded');
-  form.classList.add('ad-form--disabled');
-
-  // сброс слушателей
-  title.removeEventListener('invalid', onTitleInvalid);
-  title.removeEventListener('input', onTitleInvalid);
-  price.removeEventListener('invalid', onPriceInvalid);
-  price.removeEventListener('input', onPriceInvalid);
-  room.removeEventListener('change', onCapacityChange);
-  capacity.removeEventListener('change', onCapacityChange);
-  timein.removeEventListener('change', onTimeinChange);
-  timeout.removeEventListener('change', onTimeoutChange);
-  type.removeEventListener('change', onTypeChange);
-  button.removeEventListener('click', onCapacityChange);
-  reset.removeEventListener('click', onFormReset);
-
-  disableFieldsets('on');
-
-  // Возврат слушателя глав-пина
-  mainPin.addEventListener('mouseup', onClickMainPin);
-};
 
 var capacity = forms.querySelector('#capacity');
 var title = forms.querySelector('#title');
@@ -328,14 +292,14 @@ var checkValiation = function (id) {
 var onTitleInvalid = function () {
   checkValiation(title);
 };
-title.addEventListener('invalid', onTitleInvalid);
-title.addEventListener('input', onTitleInvalid);
+// title.addEventListener('invalid', onTitleInvalid);
+// title.addEventListener('input', onTitleInvalid);
 
 var onPriceInvalid = function () {
   checkValiation(price);
 };
-price.addEventListener('invalid', onPriceInvalid);
-price.addEventListener('input', onPriceInvalid);
+// price.addEventListener('invalid', onPriceInvalid);
+// price.addEventListener('input', onPriceInvalid);
 
 
 var onCapacityChange = function () {
@@ -349,9 +313,9 @@ var onCapacityChange = function () {
     capacity.setCustomValidity('');
   }
 };
-room.addEventListener('change', onCapacityChange);
-capacity.addEventListener('change', onCapacityChange);
-button.addEventListener('click', onCapacityChange);
+// room.addEventListener('change', onCapacityChange);
+// capacity.addEventListener('change', onCapacityChange);
+// button.addEventListener('click', onCapacityChange);
 
 
 var onTimeinChange = function () {
@@ -360,14 +324,77 @@ var onTimeinChange = function () {
 var onTimeoutChange = function () {
   timein.options.selectedIndex = timeout.options.selectedIndex;
 };
-timein.addEventListener('change', onTimeinChange);
-timeout.addEventListener('change', onTimeoutChange);
+// timein.addEventListener('change', onTimeinChange);
+// timeout.addEventListener('change', onTimeoutChange);
 
 
 var onTypeChange = function () {
   price.min = priceObj[type.options[type.selectedIndex].value];
   price.placeholder = priceObj[type.options[type.selectedIndex].value];
 };
-type.addEventListener('change', onTypeChange);
+// type.addEventListener('change', onTypeChange);
 
-reset.addEventListener('click', onFormReset);
+
+// Функция активации карты и формы
+var activeMap = function () {
+  map.classList.remove('map--faded');
+  form.classList.remove('ad-form--disabled');
+
+  disableFieldsets('off');
+  setAddress();
+  insertPin(items);
+
+
+  // Активируем слушателей
+  title.addEventListener('invalid', onTitleInvalid);
+  title.addEventListener('input', onTitleInvalid);
+  price.addEventListener('invalid', onPriceInvalid);
+  price.addEventListener('input', onPriceInvalid);
+  room.addEventListener('change', onCapacityChange);
+  capacity.addEventListener('change', onCapacityChange);
+  button.addEventListener('click', onCapacityChange);
+  room.addEventListener('change', onCapacityChange);
+  capacity.addEventListener('change', onCapacityChange);
+  button.addEventListener('click', onCapacityChange);
+  type.addEventListener('change', onTypeChange);
+  timein.addEventListener('change', onTimeinChange);
+  timeout.addEventListener('change', onTimeoutChange);
+  reset.addEventListener('click', onFormReset);
+};
+
+
+// Сброс
+var reset = document.querySelector('.ad-form__reset');
+
+var onFormReset = function () {
+  // Удаление пинов
+  var mapPins = map.querySelectorAll('.map__pin');
+  forms.reset();
+
+  for (var i = 1; i < mapPins.length; i++) {
+    mapPins[i].parentNode.removeChild(mapPins[i]);
+  }
+  removeCard();
+  removeBorder(title);
+  removeBorder(price);
+  removeBorder(capacity);
+
+  // сброс слушателей
+  title.removeEventListener('invalid', onTitleInvalid);
+  title.removeEventListener('input', onTitleInvalid);
+  price.removeEventListener('invalid', onPriceInvalid);
+  price.removeEventListener('input', onPriceInvalid);
+  room.removeEventListener('change', onCapacityChange);
+  capacity.removeEventListener('change', onCapacityChange);
+  timein.removeEventListener('change', onTimeinChange);
+  timeout.removeEventListener('change', onTimeoutChange);
+  type.removeEventListener('change', onTypeChange);
+  button.removeEventListener('click', onCapacityChange);
+  reset.removeEventListener('click', onFormReset);
+
+  map.classList.add('map--faded');
+  form.classList.add('ad-form--disabled');
+  disableFieldsets('on');
+  // Возврат слушателя глав-пина
+  mainPin.addEventListener('mouseup', onClickMainPin);
+};
