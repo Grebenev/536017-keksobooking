@@ -226,7 +226,7 @@ map.addEventListener('click', function (evt) {
   }
 });
 
-var setAddress = function ()  {
+var setAddress = function () {
   var mainPinX = mainPin.offsetLeft + Number(MAIN_PIN_WIDTH) / 2;
   var mainPinY = mainPin.offsetTop + Number(MAIN_PIN_HEIGHT);
   var addressInput = document.querySelector('#address');
@@ -292,15 +292,10 @@ var checkValiation = function (id) {
 var onTitleInvalid = function () {
   checkValiation(title);
 };
-// title.addEventListener('invalid', onTitleInvalid);
-// title.addEventListener('input', onTitleInvalid);
 
 var onPriceInvalid = function () {
   checkValiation(price);
 };
-// price.addEventListener('invalid', onPriceInvalid);
-// price.addEventListener('input', onPriceInvalid);
-
 
 var onCapacityChange = function () {
   var rooms = Number(room.options[room.selectedIndex].value);
@@ -313,10 +308,6 @@ var onCapacityChange = function () {
     capacity.setCustomValidity('');
   }
 };
-// room.addEventListener('change', onCapacityChange);
-// capacity.addEventListener('change', onCapacityChange);
-// button.addEventListener('click', onCapacityChange);
-
 
 var onTimeinChange = function () {
   timeout.options.selectedIndex = timein.options.selectedIndex;
@@ -324,16 +315,12 @@ var onTimeinChange = function () {
 var onTimeoutChange = function () {
   timein.options.selectedIndex = timeout.options.selectedIndex;
 };
-// timein.addEventListener('change', onTimeinChange);
-// timeout.addEventListener('change', onTimeoutChange);
 
 
 var onTypeChange = function () {
   price.min = priceObj[type.options[type.selectedIndex].value];
   price.placeholder = priceObj[type.options[type.selectedIndex].value];
 };
-// type.addEventListener('change', onTypeChange);
-
 
 // Функция активации карты и формы
 var activeMap = function () {
@@ -343,7 +330,6 @@ var activeMap = function () {
   disableFieldsets('off');
   setAddress();
   insertPin(items);
-
 
   // Активируем слушателей
   title.addEventListener('invalid', onTitleInvalid);
@@ -367,7 +353,6 @@ var activeMap = function () {
 var reset = document.querySelector('.ad-form__reset');
 
 var onFormReset = function () {
-  // Удаление пинов
   var mapPins = map.querySelectorAll('.map__pin');
   forms.reset();
 
