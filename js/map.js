@@ -2,9 +2,10 @@
 
 var PIN_WHIDTH = 40;
 var PIN_HEIGHT = 40;
-var MAIN_PIN_WIDTH = 156;
-var MAIN_PIN_HEIGHT = 200;
+var MAIN_PIN_WIDTH = 66;
+var MAIN_PIN_HEIGHT = 80;
 var CARD_QUANTITY = 8;
+var MAP__WIDTH = 905;
 
 var titles = [
   'Большая уютная квартира',
@@ -256,11 +257,20 @@ var dragAndDrop = function () {
         y: moveEvt.clientY
       };
 
-      if ((mainPin.offsetTop - shift.y > 130) && (mainPin.offsetTop - shift.y < 630)) {
+      var pinTopStart = 130 - MAIN_PIN_HEIGHT - 1;
+      var pinTopEnd = 630 - MAIN_PIN_HEIGHT + 1;
+      var pinLeftStart = 0 - MAIN_PIN_WIDTH / 2 - 1;
+      var pinLeftEnd = MAP__WIDTH - MAIN_PIN_WIDTH / 2 + 1;
+
+      if ((mainPin.offsetTop - shift.y > pinTopStart) && (mainPin.offsetTop - shift.y < pinTopEnd)) {
         mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
       }
 
-      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+      if ((mainPin.offsetLeft - shift.x > pinLeftStart) && mainPin.offsetLeft - shift.x < pinLeftEnd) {
+        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+      }
+
+
       setAddress();
     };
 
@@ -280,7 +290,7 @@ var dragAndDrop = function () {
 
 // Форма
 var forms = document.querySelector('.ad-form');
-
+setAddress(); // адрес при загрузке
 
 // Дизаблим филдсеты
 var disableFieldsets = function (swich) {
@@ -375,6 +385,7 @@ var activeMap = function () {
   setAddress();
   insertPin(items);
   dragAndDrop();
+
   // Активируем слушателей
   title.addEventListener('invalid', onTitleInvalid);
   title.addEventListener('input', onTitleInvalid);
