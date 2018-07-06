@@ -5,7 +5,7 @@ var PIN_HEIGHT = 40;
 var MAIN_PIN_WIDTH = 66;
 var MAIN_PIN_HEIGHT = 80;
 var CARD_QUANTITY = 8;
-var MAP__WIDTH = 905;
+var MAP__WIDTH = 1200;
 
 var titles = [
   'Большая уютная квартира',
@@ -204,16 +204,6 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
-
-var mainPin = document.querySelector('.map__pin--main'); // 1находим глав пин
-
-var onClickMainPin = function () { // 2создаем функция при срабатывании активируем карту
-  activeMap(); // 3 активир карту
-  mainPin.removeEventListener('click', onClickMainPin); // убираем слушатель клика
-};
-
-mainPin.addEventListener('click', onClickMainPin); // запускаем слушатель клика
-
 map.addEventListener('click', function (evt) {
   if (evt.target.className === 'popup__close') {
     removeCard();
@@ -231,62 +221,62 @@ var setAddress = function () {
   var mainPinX = mainPin.offsetLeft + Number(MAIN_PIN_WIDTH) / 2;
   var mainPinY = mainPin.offsetTop + Number(MAIN_PIN_HEIGHT);
   var addressInput = document.querySelector('#address');
-  addressInput.value = mainPinX + ',' + mainPinY;
+  addressInput.value = mainPinX + ', ' + mainPinY;
 };
 
-// Функция перетаскивания
-var dragAndDrop = function () {
-  mainPin.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
+// Перемещение главного пина
+var mainPin = document.querySelector('.map__pin--main');
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
+mainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  activeMap();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
     };
 
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
-
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-
-      var pinTopStart = 130 - MAIN_PIN_HEIGHT - 1;
-      var pinTopEnd = 630 - MAIN_PIN_HEIGHT + 1;
-      var pinLeftStart = 0 - MAIN_PIN_WIDTH / 2 - 1;
-      var pinLeftEnd = MAP__WIDTH - MAIN_PIN_WIDTH / 2 + 1;
-
-      if ((mainPin.offsetTop - shift.y > pinTopStart) && (mainPin.offsetTop - shift.y < pinTopEnd)) {
-        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-      }
-
-      if ((mainPin.offsetLeft - shift.x > pinLeftStart) && mainPin.offsetLeft - shift.x < pinLeftEnd) {
-        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-      }
-
-
-      setAddress();
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
     };
 
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
+    var pinTopStart = 130 - MAIN_PIN_HEIGHT - 1;
+    var pinTopEnd = 630 - MAIN_PIN_HEIGHT + 1;
+    var pinLeftStart = 0 - MAIN_PIN_WIDTH / 2 - 1;
+    var pinLeftEnd = MAP__WIDTH - MAIN_PIN_WIDTH / 2 + 1;
 
-      pins.removeEventListener('mousemove', onMouseMove);
-      pins.removeEventListener('mouseup', onMouseUp);
-    };
+    if ((mainPin.offsetTop - shift.y > pinTopStart) && (mainPin.offsetTop - shift.y < pinTopEnd)) {
+      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+    }
 
-    pins.addEventListener('mousemove', onMouseMove);
-    pins.addEventListener('mouseup', onMouseUp);
+    if ((mainPin.offsetLeft - shift.x > pinLeftStart) && mainPin.offsetLeft - shift.x < pinLeftEnd) {
+      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+    }
 
-  });
+    setAddress();
+  };
 
-};
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    pins.removeEventListener('mousemove', onMouseMove);
+    pins.removeEventListener('mouseup', onMouseUp);
+  };
+
+  pins.addEventListener('mousemove', onMouseMove);
+  pins.addEventListener('mouseup', onMouseUp);
+
+});
 
 // Форма
 var forms = document.querySelector('.ad-form');
@@ -305,7 +295,6 @@ var disableFieldsets = function (swich) {
   }
 };
 disableFieldsets('on');
-
 
 var capacity = forms.querySelector('#capacity');
 var title = forms.querySelector('#title');
@@ -384,7 +373,7 @@ var activeMap = function () {
   disableFieldsets('off');
   setAddress();
   insertPin(items);
-  dragAndDrop();
+  // dragAndDrop();
 
   // Активируем слушателей
   title.addEventListener('invalid', onTitleInvalid);
@@ -435,6 +424,4 @@ var onFormReset = function () {
   map.classList.add('map--faded');
   form.classList.add('ad-form--disabled');
   disableFieldsets('on');
-  // Возврат слушателя глав-пина
-  mainPin.addEventListener('mouseup', onClickMainPin);
 };
