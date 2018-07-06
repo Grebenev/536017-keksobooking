@@ -204,14 +204,14 @@ document.addEventListener('keydown', function (evt) {
 });
 
 
-var mainPin = document.querySelector('.map__pin--main');
+var mainPin = document.querySelector('.map__pin--main'); // 1находим глав пин
 
-var onClickMainPin = function () {
-  activeMap();
-  mainPin.removeEventListener('mouseup', onClickMainPin);
+var onClickMainPin = function () { // 2создаем функция при срабатывании активируем карту
+  activeMap(); // 3 активир карту
+  mainPin.removeEventListener('click', onClickMainPin); // убираем слушатель клика
 };
 
-mainPin.addEventListener('mouseup', onClickMainPin);
+mainPin.addEventListener('click', onClickMainPin); // запускаем слушатель клика
 
 map.addEventListener('click', function (evt) {
   if (evt.target.className === 'popup__close') {
@@ -233,6 +233,48 @@ var setAddress = function () {
   addressInput.value = mainPinX + ',' + mainPinY;
 };
 
+// ----------------
+var dragAndDrop = function () {
+  mainPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+      setAddress();
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      pins.removeEventListener('mousemove', onMouseMove);
+      pins.removeEventListener('mouseup', onMouseUp);
+    };
+    var mapOverlay = document.querySelector('.map__overlay');
+    pins.addEventListener('mousemove', onMouseMove);
+    pins.addEventListener('mouseup', onMouseUp);
+
+  });
+
+};
+// ------------
 
 // Форма
 var forms = document.querySelector('.ad-form');
@@ -330,7 +372,7 @@ var activeMap = function () {
   disableFieldsets('off');
   setAddress();
   insertPin(items);
-
+  dragAndDrop();
   // Активируем слушателей
   title.addEventListener('invalid', onTitleInvalid);
   title.addEventListener('input', onTitleInvalid);
