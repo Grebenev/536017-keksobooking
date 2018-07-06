@@ -233,7 +233,7 @@ var setAddress = function () {
   addressInput.value = mainPinX + ',' + mainPinY;
 };
 
-// ----------------
+// Функция перетаскивания
 var dragAndDrop = function () {
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -256,7 +256,10 @@ var dragAndDrop = function () {
         y: moveEvt.clientY
       };
 
-      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+      if ((mainPin.offsetTop - shift.y > 130) && (mainPin.offsetTop - shift.y < 630)) {
+        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+      }
+
       mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
       setAddress();
     };
@@ -267,14 +270,13 @@ var dragAndDrop = function () {
       pins.removeEventListener('mousemove', onMouseMove);
       pins.removeEventListener('mouseup', onMouseUp);
     };
-    var mapOverlay = document.querySelector('.map__overlay');
+
     pins.addEventListener('mousemove', onMouseMove);
     pins.addEventListener('mouseup', onMouseUp);
 
   });
 
 };
-// ------------
 
 // Форма
 var forms = document.querySelector('.ad-form');
