@@ -1,8 +1,8 @@
 'use strict';
 
-var PIN_WHIDTH = 40;
-var PIN_HEIGHT = 40;
-var MAIN_PIN_WIDTH = 66;
+var PIN_WHIDTH = 50;
+var PIN_HEIGHT = 70;
+var MAIN_PIN_WIDTH = 64;
 var MAIN_PIN_HEIGHT = 80;
 var CARD_QUANTITY = 8;
 var MAP__WIDTH = 1200;
@@ -217,9 +217,9 @@ map.addEventListener('click', function (evt) {
   }
 });
 
-var setAddress = function () {
-  var mainPinX = mainPin.offsetLeft + Number(MAIN_PIN_WIDTH) / 2;
-  var mainPinY = mainPin.offsetTop + Number(MAIN_PIN_HEIGHT);
+var setAddress = function (x, y) {
+  var mainPinX = mainPin.offsetLeft + x / 2;
+  var mainPinY = mainPin.offsetTop + y;
   var addressInput = document.querySelector('#address');
   addressInput.value = mainPinX + ', ' + mainPinY;
 };
@@ -263,7 +263,7 @@ mainPin.addEventListener('mousedown', function (evt) {
       mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
     }
 
-    setAddress();
+    setAddress(MAIN_PIN_WIDTH, MAIN_PIN_HEIGHT);
   };
 
   var onMouseUp = function (upEvt) {
@@ -280,7 +280,7 @@ mainPin.addEventListener('mousedown', function (evt) {
 
 // Форма
 var forms = document.querySelector('.ad-form');
-setAddress(); // адрес при загрузке
+setAddress(MAIN_PIN_WIDTH, MAIN_PIN_HEIGHT / 2); // адрес при загрузке
 
 // Дизаблим филдсеты
 var disableFieldsets = function (swich) {
@@ -371,7 +371,7 @@ var activeMap = function () {
   form.classList.remove('ad-form--disabled');
 
   disableFieldsets('off');
-  setAddress();
+  setAddress(MAIN_PIN_WIDTH, MAIN_PIN_HEIGHT);
   insertPin(items);
   // dragAndDrop();
 
