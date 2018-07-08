@@ -5,7 +5,6 @@ var PIN_HEIGHT = 70;
 var MAIN_PIN_WIDTH = 64;
 var MAIN_PIN_HEIGHT = 80;
 var CARD_QUANTITY = 8;
-var MAP__WIDTH = 1200;
 
 var titles = [
   'Большая уютная квартира',
@@ -252,8 +251,8 @@ mainPin.addEventListener('mousedown', function (evt) {
 
     var pinTopStart = 130 - MAIN_PIN_HEIGHT - 1;
     var pinTopEnd = 630 - MAIN_PIN_HEIGHT + 1;
-    var pinLeftStart = 0 - MAIN_PIN_WIDTH / 2 - 1;
-    var pinLeftEnd = MAP__WIDTH - MAIN_PIN_WIDTH / 2 + 1;
+    var pinLeftStart = 0;
+    var pinLeftEnd = map.offsetWidth - MAIN_PIN_WIDTH;
 
     if ((mainPin.offsetTop - shift.y > pinTopStart) && (mainPin.offsetTop - shift.y < pinTopEnd)) {
       mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
