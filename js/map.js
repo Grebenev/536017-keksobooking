@@ -1,9 +1,9 @@
 'use strict';
 
-var PIN_WHIDTH = 40;
-var PIN_HEIGHT = 40;
-var MAIN_PIN_WIDTH = 156;
-var MAIN_PIN_HEIGHT = 200;
+var PIN_WHIDTH = 50;
+var PIN_HEIGHT = 70;
+var MAIN_PIN_WIDTH = 64;
+var MAIN_PIN_HEIGHT = 80;
 var CARD_QUANTITY = 8;
 
 var titles = [
@@ -203,16 +203,6 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
-
-var mainPin = document.querySelector('.map__pin--main');
-
-var onClickMainPin = function () {
-  activeMap();
-  mainPin.removeEventListener('mouseup', onClickMainPin);
-};
-
-mainPin.addEventListener('mouseup', onClickMainPin);
-
 map.addEventListener('click', function (evt) {
   if (evt.target.className === 'popup__close') {
     removeCard();
@@ -226,17 +216,70 @@ map.addEventListener('click', function (evt) {
   }
 });
 
-var setAddress = function () {
-  var mainPinX = mainPin.offsetLeft + Number(MAIN_PIN_WIDTH) / 2;
-  var mainPinY = mainPin.offsetTop + Number(MAIN_PIN_HEIGHT);
+var setAddress = function (x, y) {
+  var mainPinX = mainPin.offsetLeft + x / 2;
+  var mainPinY = mainPin.offsetTop + y;
   var addressInput = document.querySelector('#address');
-  addressInput.value = mainPinX + ',' + mainPinY;
+  addressInput.value = mainPinX + ', ' + mainPinY;
 };
 
+// Перемещение главного пина
+var mainPin = document.querySelector('.map__pin--main');
+
+mainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  activeMap();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var pinTopStart = 130 - MAIN_PIN_HEIGHT - 1;
+    var pinTopEnd = 630 - MAIN_PIN_HEIGHT + 1;
+    var pinLeftStart = 0;
+    var pinLeftEnd = map.offsetWidth - MAIN_PIN_WIDTH;
+
+    if ((mainPin.offsetTop - shift.y > pinTopStart) && (mainPin.offsetTop - shift.y < pinTopEnd)) {
+      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+    }
+
+    if ((mainPin.offsetLeft - shift.x > pinLeftStart) && mainPin.offsetLeft - shift.x < pinLeftEnd) {
+      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+    }
+
+    setAddress(MAIN_PIN_WIDTH, MAIN_PIN_HEIGHT);
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    pins.removeEventListener('mousemove', onMouseMove);
+    pins.removeEventListener('mouseup', onMouseUp);
+  };
+
+  pins.addEventListener('mousemove', onMouseMove);
+  pins.addEventListener('mouseup', onMouseUp);
+
+});
 
 // Форма
 var forms = document.querySelector('.ad-form');
-
+setAddress(MAIN_PIN_WIDTH, MAIN_PIN_HEIGHT / 2); // адрес при загрузке
 
 // Дизаблим филдсеты
 var disableFieldsets = function (swich) {
@@ -251,7 +294,6 @@ var disableFieldsets = function (swich) {
   }
 };
 disableFieldsets('on');
-
 
 var capacity = forms.querySelector('#capacity');
 var title = forms.querySelector('#title');
@@ -328,8 +370,9 @@ var activeMap = function () {
   form.classList.remove('ad-form--disabled');
 
   disableFieldsets('off');
-  setAddress();
+  setAddress(MAIN_PIN_WIDTH, MAIN_PIN_HEIGHT);
   insertPin(items);
+  // dragAndDrop();
 
   // Активируем слушателей
   title.addEventListener('invalid', onTitleInvalid);
@@ -380,6 +423,4 @@ var onFormReset = function () {
   map.classList.add('map--faded');
   form.classList.add('ad-form--disabled');
   disableFieldsets('on');
-  // Возврат слушателя глав-пина
-  mainPin.addEventListener('mouseup', onClickMainPin);
 };
