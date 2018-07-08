@@ -216,15 +216,17 @@ map.addEventListener('click', function (evt) {
   }
 });
 
-var setAddress = function (x, y) {
-  var mainPinX = mainPin.offsetLeft + x / 2;
-  var mainPinY = mainPin.offsetTop + y;
+var setAddress = function (pinX, pinY) {
+  var mainPinX = mainPin.offsetLeft + pinX / 2;
+  var mainPinY = mainPin.offsetTop + pinY;
   var addressInput = document.querySelector('#address');
   addressInput.value = mainPinX + ', ' + mainPinY;
 };
 
 // Перемещение главного пина
 var mainPin = document.querySelector('.map__pin--main');
+var startMainPinY = mainPin.offsetTop; // начальные значения главного пина
+var startMainPinX = mainPin.offsetLeft;
 
 mainPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
@@ -407,6 +409,12 @@ var onFormReset = function () {
   removeBorder(price);
   removeBorder(capacity);
 
+  // возврат главного пина
+
+  mainPin.style.top = startMainPinY + 'px';
+  mainPin.style.left = startMainPinX + 'px';
+  setAddress(MAIN_PIN_WIDTH, MAIN_PIN_HEIGHT / 2);
+
   // сброс слушателей
   title.removeEventListener('invalid', onTitleInvalid);
   title.removeEventListener('input', onTitleInvalid);
@@ -423,4 +431,5 @@ var onFormReset = function () {
   map.classList.add('map--faded');
   form.classList.add('ad-form--disabled');
   disableFieldsets('on');
+
 };
