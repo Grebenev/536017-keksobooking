@@ -1,15 +1,7 @@
 'use strict';
 
-// ГЛОБАЛЬНЫЕ
-window.CARD_QUANTITY = 8;
-window.template = document.querySelector('template');
-window.map = document.querySelector('.map');
-window.mainPin = document.querySelector('.map__pin--main');
-window.MAIN_PIN_WIDTH = 64;
-window.MAIN_PIN_HEIGHT = 80;
 
 (function () {
-
   var titles = [
     'Большая уютная квартира',
     'Маленькая неуютная квартира',
