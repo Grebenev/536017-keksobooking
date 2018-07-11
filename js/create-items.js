@@ -1,6 +1,5 @@
 'use strict';
 
-
 (function () {
   var titles = [
     'Большая уютная квартира',
@@ -58,7 +57,7 @@
   };
 
   // Функция создания главного массива объектов, принимает на вход число, отдает массив объектов
-  window.createItems = function (number) {
+  var createItems = function (number) {
     var mainItems = [];
     for (var i = 0; i < number; i++) {
       var obj = {};
@@ -83,4 +82,5 @@
     }
     return mainItems;
   };
+  window.createItems = createItems;
 })();
