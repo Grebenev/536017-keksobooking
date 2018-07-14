@@ -1,7 +1,31 @@
 'use strict';
 
 (function () {
-  var items = window.createItems(8);
+  var onError = function (message) {
+
+    var node = document.createElement('div');
+    node.style = 'z-index: 2; margin: 0 auto; padding: 10px; text-align: center; background-color: red; border: 1px solid #fff';
+    node.style.position = 'absolute';
+    node.style.bottom = 10 + '%';
+    node.style.left = 30 + '%';
+    node.style.right = 30 + '%';
+    node.style.fontSize = '20px';
+    node.style.color = '#fff';
+
+
+    node.textContent = message;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  var onLoad = function (data) {
+    window.items = data;
+  };
+
+  window.load(onLoad, onError);
+  // ----------------------
+
+
+  // var items = window.createItems(8);
   var capacity = window.variables.forms.querySelector('#capacity');
   var title = window.variables.forms.querySelector('#title');
   var type = window.variables.forms.querySelector('#type');
@@ -11,6 +35,7 @@
   var timeout = window.variables.forms.querySelector('#timeout');
   var button = window.variables.forms.querySelector('.ad-form__submit');
   var reset = document.querySelector('.ad-form__reset');
+  var form = document.querySelector('.ad-form');
 
   var startMainPinY = window.variables.mainPin.offsetTop; // начальные значения главного пина
   var startMainPinX = window.variables.mainPin.offsetLeft;
@@ -95,7 +120,14 @@
     window.variables.forms.classList.remove('ad-form--disabled');
 
     disableFieldsets('off');
-    window.insertPin(items);
+    window.insertPin(window.items);
+
+    form.addEventListener('submit', function (evt) {
+      window.upload(new FormData(form), function (response) {
+        resetForm();
+      });
+      evt.preventDefault();
+    });
 
     // Активируем слушателей
     title.addEventListener('invalid', onTitleInvalid);
@@ -156,4 +188,6 @@
   };
 
   disableFieldsets('on');
+
+
 })();
