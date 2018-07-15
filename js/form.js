@@ -19,9 +19,10 @@
 
   var onLoad = function (data) {
     window.items = data;
+    window.insertPin(window.items); // вставляем пины по загрузке data
   };
 
-  window.load(onLoad, onError);
+  // window.load(onLoad, onError);
   // ----------------------
 
 
@@ -116,14 +117,17 @@
   setAddress(startMainPinX + window.variables.MAIN_PIN_WIDTH / 2, startMainPinY + window.variables.MAIN_PIN_HEIGHT / 2);
 
   var active = function () {
+    window.load(onLoad, onError);
+
     window.variables.map.classList.remove('map--faded');
     window.variables.forms.classList.remove('ad-form--disabled');
 
     disableFieldsets('off');
-    window.insertPin(window.items);
+    // window.insertPin(window.items);
 
     form.addEventListener('submit', function (evt) {
-      window.upload(new FormData(form), function (response) {
+
+      window.upload(new FormData(form), function () {
         resetForm();
       });
       evt.preventDefault();
