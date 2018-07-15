@@ -48,22 +48,22 @@
   // загрузка
   window.load = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
-    var URL = 'https://js.dump.academy/keksobooking/data';
+    var DOWNLOAD_URL = 'https://js.dump.academy/keksobooking/data';
 
     getRequest(xhr, onLoad, onError);
 
-    xhr.open('GET', URL);
+    xhr.open('GET', DOWNLOAD_URL);
     xhr.send();
   };
 
   // отправка
   window.upload = function (data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
-    var URL = 'https://js.dump.academy/keksobooking';
+    var UPLOAD_URL = 'https://js.dump.academy/keksobooking';
 
     getRequest(xhr, onLoad, onError);
 
-    xhr.open('POST', URL);
+    xhr.open('POST', UPLOAD_URL);
     xhr.send(data);
   };
 })();

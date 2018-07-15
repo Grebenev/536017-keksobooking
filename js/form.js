@@ -1,15 +1,16 @@
 'use strict';
 
 (function () {
-  var showMessage = function (message, color) {
+  var showMessage = function (message) {
     var node = document.createElement('div');
     node.style = 'z-index: 2; margin: 0 auto; padding: 10px; text-align: center; border: 1px solid #fff';
     node.style.position = 'fixed';
+    node.style.top = 50 + '%';
     node.style.left = 0;
     node.style.right = 0;
     node.style.fontSize = '20px';
     node.style.color = '#fff';
-    node.style.background = color;
+    node.style.background = 'red';
     node.className = 'message';
 
 
@@ -25,7 +26,7 @@
   };
 
   var onError = function (message) {
-    showMessage(message, 'red');
+    showMessage(message);
   };
 
   var onLoad = function (data) {
@@ -133,7 +134,6 @@
     form.addEventListener('submit', function (evt) {
 
       window.upload(new FormData(form), function () {
-        showMessage('Успешная загрузка', 'green');
         resetForm();
       }, onError);
       evt.preventDefault();

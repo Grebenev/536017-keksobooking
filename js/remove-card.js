@@ -66,8 +66,12 @@
   var removeCard = function () {
     var card = window.variables.map.querySelector('.map__card');
     if (card) {
+
+      var cardActive = window.variables.map.querySelector('.map__pin--active');
+      if (cardActive) {
+        cardActive.classList.remove('map__pin--active');
+      }
       window.variables.map.removeChild(card);
-      window.variables.map.querySelector('.map__pin--active').classList.remove('map__pin--active');
     }
   };
 
