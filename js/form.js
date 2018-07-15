@@ -1,20 +1,31 @@
 'use strict';
 
 (function () {
-  var onError = function (message) {
-
+  var showMessage = function (message, color) {
     var node = document.createElement('div');
-    node.style = 'z-index: 2; margin: 0 auto; padding: 10px; text-align: center; background-color: red; border: 1px solid #fff';
-    node.style.position = 'absolute';
-    node.style.bottom = 10 + '%';
-    node.style.left = 30 + '%';
-    node.style.right = 30 + '%';
+    node.style = 'z-index: 2; margin: 0 auto; padding: 10px; text-align: center; border: 1px solid #fff';
+    node.style.position = 'fixed';
+    node.style.left = 0;
+    node.style.right = 0;
     node.style.fontSize = '20px';
     node.style.color = '#fff';
+    node.style.background = color;
+    node.className = 'message';
 
 
     node.textContent = message;
     document.body.insertAdjacentElement('afterbegin', node);
+
+    var removeElement = function () {
+      var element = document.querySelector('.message');
+      document.body.removeChild(element);
+    };
+
+    setTimeout(removeElement, 1500);
+  };
+
+  var onError = function (message) {
+    showMessage(message, 'red');
   };
 
   var onLoad = function (data) {
@@ -22,11 +33,6 @@
     window.insertPin(window.items); // вставляем пины по загрузке data
   };
 
-  // window.load(onLoad, onError);
-  // ----------------------
-
-
-  // var items = window.createItems(8);
   var capacity = window.variables.forms.querySelector('#capacity');
   var title = window.variables.forms.querySelector('#title');
   var type = window.variables.forms.querySelector('#type');
@@ -123,13 +129,13 @@
     window.variables.forms.classList.remove('ad-form--disabled');
 
     disableFieldsets('off');
-    // window.insertPin(window.items);
 
     form.addEventListener('submit', function (evt) {
 
       window.upload(new FormData(form), function () {
+        showMessage('Успешная загрузка', 'green');
         resetForm();
-      });
+      }, onError);
       evt.preventDefault();
     });
 
@@ -192,6 +198,4 @@
   };
 
   disableFieldsets('on');
-
-
 })();

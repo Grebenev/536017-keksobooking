@@ -1,32 +1,32 @@
 'use strict';
 
 (function () {
-  // загрузка
-  window.load = function (onLoad, onError) {
-    var URL = 'https://js.dump.academy/keksobooking/data';
+  var getRequest = function (XHR, onLoad, onError) {
+    var TIME_OUT = 2000;
+    var SUCCESS = 200;
+    var WRONG_REQUEST = 400;
+    var UNAUTHORIZED_ACCESS = 401;
+    var DATA_NOT_FOUND = 404;
 
-    var xhr = new XMLHttpRequest();
-
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', function () {
+    XHR.responseType = 'json';
+    XHR.addEventListener('load', function () {
       var error;
-      switch (xhr.status) {
+      switch (XHR.status) {
 
-        case 200:
-          onLoad(xhr.response);
+        case SUCCESS:
+          onLoad(XHR.response);
           break;
-        case 400:
+        case WRONG_REQUEST:
           error = 'Неверный запрос';
           break;
-        case 401:
+        case UNAUTHORIZED_ACCESS:
           error = 'Пользователь не авторизован';
           break;
-        case 404:
+        case DATA_NOT_FOUND:
           error = 'Ничего не найдено 404';
           break;
         default:
-          error = 'Cтатус ответа: : ' + xhr.status + ' ' + xhr.statusText;
+          error = 'Cтатус ответа: : ' + XHR.status + ' ' + XHR.statusText;
       }
 
       if (error) {
@@ -34,15 +34,23 @@
       }
     });
 
-    xhr.addEventListener('error', function () {
+    XHR.addEventListener('error', function () {
       onError('Произошла ошибка соединения');
     });
 
-    xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    XHR.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + XHR.timeout + 'мс');
     });
 
-    xhr.timeout = 1000; // 1s
+    XHR.timeout = TIME_OUT; // 1s
+  };
+
+  // загрузка
+  window.load = function (onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    var URL = 'https://js.dump.academy/keksobooking/data';
+
+    getRequest(xhr, onLoad, onError);
 
     xhr.open('GET', URL);
     xhr.send();
@@ -50,21 +58,12 @@
 
   // отправка
   window.upload = function (data, onLoad, onError) {
+    var xhr = new XMLHttpRequest();
     var URL = 'https://js.dump.academy/keksobooking';
 
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', function () {
-      onLoad(xhr.response);
-    });
-
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-    });
+    getRequest(xhr, onLoad, onError);
 
     xhr.open('POST', URL);
     xhr.send(data);
-    // console.log(data.get('title'));
   };
 })();
