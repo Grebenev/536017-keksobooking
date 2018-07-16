@@ -124,7 +124,7 @@
   setAddress(startMainPinX + window.variables.MAIN_PIN_WIDTH / 2, startMainPinY + window.variables.MAIN_PIN_HEIGHT / 2);
 
   var active = function () {
-    window.load(onLoad, onError);
+    window.backend.load(onLoad, onError);
 
     window.variables.map.classList.remove('map--faded');
     window.variables.forms.classList.remove('ad-form--disabled');
@@ -133,9 +133,10 @@
 
     form.addEventListener('submit', function (evt) {
 
-      window.upload(new FormData(form), function () {
+      window.backend.upLoad(new FormData(form), function () {
         resetForm();
       }, onError);
+
       evt.preventDefault();
     });
 
