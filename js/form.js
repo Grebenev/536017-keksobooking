@@ -1,7 +1,39 @@
 'use strict';
 
 (function () {
-  var items = window.createItems(8);
+  var showMessage = function (message) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 2; margin: 0 auto; padding: 10px; text-align: center; border: 1px solid #fff';
+    node.style.position = 'fixed';
+    node.style.top = 50 + '%';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '20px';
+    node.style.color = '#fff';
+    node.style.background = 'red';
+    node.className = 'message';
+
+
+    node.textContent = message;
+    document.body.insertAdjacentElement('afterbegin', node);
+
+    var removeElement = function () {
+      var element = document.querySelector('.message');
+      document.body.removeChild(element);
+    };
+
+    setTimeout(removeElement, 1500);
+  };
+
+  var onError = function (message) {
+    showMessage(message);
+  };
+
+  var onLoad = function (data) {
+    window.items = data;
+    window.insertPin(window.items); // вставляем пины по загрузке data
+  };
+
   var capacity = window.variables.forms.querySelector('#capacity');
   var title = window.variables.forms.querySelector('#title');
   var type = window.variables.forms.querySelector('#type');
@@ -11,6 +43,7 @@
   var timeout = window.variables.forms.querySelector('#timeout');
   var button = window.variables.forms.querySelector('.ad-form__submit');
   var reset = document.querySelector('.ad-form__reset');
+  var form = document.querySelector('.ad-form');
 
   var startMainPinY = window.variables.mainPin.offsetTop; // начальные значения главного пина
   var startMainPinX = window.variables.mainPin.offsetLeft;
@@ -91,11 +124,21 @@
   setAddress(startMainPinX + window.variables.MAIN_PIN_WIDTH / 2, startMainPinY + window.variables.MAIN_PIN_HEIGHT / 2);
 
   var active = function () {
+    window.backend.load(onLoad, onError);
+
     window.variables.map.classList.remove('map--faded');
     window.variables.forms.classList.remove('ad-form--disabled');
 
     disableFieldsets('off');
-    window.insertPin(items);
+
+    form.addEventListener('submit', function (evt) {
+
+      window.backend.upLoad(new FormData(form), function () {
+        resetForm();
+      }, onError);
+
+      evt.preventDefault();
+    });
 
     // Активируем слушателей
     title.addEventListener('invalid', onTitleInvalid);

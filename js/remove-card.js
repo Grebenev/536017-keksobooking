@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var CARD_QUANTITY = 8;
+  // var CARD_QUANTITY = 8;
 
   var createCard = function (obj) {
     var typeHomes = {
@@ -66,8 +66,12 @@
   var removeCard = function () {
     var card = window.variables.map.querySelector('.map__card');
     if (card) {
+
+      var cardActive = window.variables.map.querySelector('.map__pin--active');
+      if (cardActive) {
+        cardActive.classList.remove('map__pin--active');
+      }
       window.variables.map.removeChild(card);
-      window.variables.map.querySelector('.map__pin--active').classList.remove('map__pin--active');
     }
   };
 
@@ -77,11 +81,11 @@
     }
 
     if (evt.target.dataset.id) {
-      insertCard(window.createItems(CARD_QUANTITY)[evt.target.dataset.id]);
+      insertCard(window.items[evt.target.dataset.id]);
       window.variables.map.querySelector('[data-id = "' + evt.target.dataset.id + '"]').classList.add('map__pin--active');
 
     } else if (evt.target.parentElement.dataset.id) {
-      insertCard(window.createItems(CARD_QUANTITY)[evt.target.parentElement.dataset.id]);
+      insertCard(window.items[evt.target.parentElement.dataset.id]);
       window.variables.map.querySelector('[data-id = "' + evt.target.parentElement.dataset.id + '"]').classList.add('map__pin--active');
 
     }
