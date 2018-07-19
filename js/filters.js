@@ -7,8 +7,6 @@
   var price = filterForm.querySelector('#housing-price');
   var rooms = filterForm.querySelector('#housing-rooms');
   var guests = filterForm.querySelector('#housing-guests');
-  // var wifi = filterForm.querySelector('#filter-wifi');
-
 
   // ТИП
   var checkType = function (offerObject, value) {
@@ -39,14 +37,30 @@
   };
 
   // ЧЕКБОКСЫ
-  // var checkFeatures = function (offerObject, value) {
-  //
-  // };
+  var checkboxElement = document.querySelectorAll('.map__checkbox');
+  var checkFeatures = function (offerObject, element) {
+    var checkedArray = [];
 
-  // // ОСНОВНАЯ
+    element.forEach(function (el) {
+      if (el.checked) {
+        checkedArray.push(el.value);
+      }
+    });
+
+    switch (checkedArray) {
+      case checkedArray:
+        return (checkedArray.every(function (feature) {
+          return (offerObject.offer.features.indexOf(feature) >= 0);
+        }));
+
+      default: return true;
+    }
+  };
+
+  // ОСНОВНАЯ
   var filterResult = function () {
     return window.items.filter(function (item) {
-      return checkType(item, type.value) && checkPrice(item, price.value) && checkRooms(item, rooms.value) && checkGuests(item, guests.value);
+      return checkType(item, type.value) && checkPrice(item, price.value) && checkRooms(item, rooms.value) && checkGuests(item, guests.value) && checkFeatures(item, checkboxElement);
     });
   };
 
