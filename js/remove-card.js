@@ -11,13 +11,6 @@
       bungalo: 'Бунгало'
     };
 
-    var parentFeatures = window.variables.template.content.querySelector('.popup__features');
-    for (var i = 0; i < obj.offer.features.length; i++) {
-      var createEl = document.createElement('li');
-      createEl.className = 'popup__feature' + ' popup__feature--' + obj.offer.features[i];
-      parentFeatures.appendChild(createEl);
-    }
-
     // Функция очистки DOM
     var clearDom = function (classname) {
       var clear = window.variables.template.content.querySelector(classname);
@@ -25,6 +18,13 @@
     };
     clearDom('.popup__photos');
     clearDom('.popup__features');
+
+    var parentFeatures = window.variables.template.content.querySelector('.popup__features');
+    for (var i = 0; i < obj.offer.features.length; i++) {
+      var createEl = document.createElement('li');
+      createEl.className = 'popup__feature' + ' popup__feature--' + obj.offer.features[i];
+      parentFeatures.appendChild(createEl);
+    }
 
     var parentPhotos = window.variables.template.content.querySelector('.popup__photos');
     for (var j = 0; j < obj.offer.photos.length; j++) {

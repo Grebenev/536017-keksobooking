@@ -31,7 +31,8 @@
 
   var onLoad = function (data) {
     window.items = data;
-    window.insertPin(window.items); // вставляем пины по загрузке data
+    // window.insertPin(window.items); // вставляем пины по загрузке data
+    // window.insertPin(window.filterResult); // вставляем пины по фильтру
   };
 
   var capacity = window.variables.forms.querySelector('#capacity');
@@ -158,12 +159,12 @@
   };
 
   var resetForm = function () {
-    var mapPins = window.variables.map.querySelectorAll('.map__pin');
-    window.variables.forms.reset();
-    for (var i = 1; i < mapPins.length; i++) {
-      mapPins[i].parentNode.removeChild(mapPins[i]);
-    }
-
+    // var mapPins = window.variables.map.querySelectorAll('.map__pin');
+    // window.variables.forms.reset();
+    // for (var i = 1; i < mapPins.length; i++) {
+    //   mapPins[i].parentNode.removeChild(mapPins[i]);
+    // }
+    window.pin.removePin();
     window.removeCard();
     removeBorder(title);
     removeBorder(price);

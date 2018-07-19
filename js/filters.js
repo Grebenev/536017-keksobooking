@@ -48,29 +48,36 @@
 
     var checked = filterForm.querySelectorAll('input[type ="checkbox"]:checked'); // Ищем все чекнутые чекбоксы
 
-    checked.forEach(function (element) { // листаем массив чекбоксов
+    checked.forEach(function (element, index) { // листаем массив чекбоксов
 
-      console.log('Включен ' + element.value); // покажем значение включенного
-
+      console.log('Включен ' + element.value + ' индекс ' + index); // покажем значение включенного
+      window.rrr = element.value;
     });
 
-    // console.log('from ' + offerObject.offer.title + offerObject.offer.features.indexOf(value));
+    if (offerObject.offer.features.indexOf(value) === -1) {
 
-    return offerObject.offer.features.indexOf(value) + 1;
+      return false;
+    }
+
+    return true;
+
+    // return offerObject.offer.features.indexOf(value) === -1 ? false : true;
 
   };
 
   // ОСНОВНАЯ
   filterForm.addEventListener('change', function () {
+    window.pin.removePin();
 
-    var filterResult = window.items.filter(function (item) {
-      return checkType(item, type.value) && checkPrice(item, price.value) && checkRoom(item, room.value) && checkGuest(item, guest.value) && checkFeatures(item, 'wifi');
+    var filterObjects = window.items; // копия массива объектов
+
+    var filterResult = filterObjects.filter(function (item) {
+      return checkType(item, type.value) && checkPrice(item, price.value) && checkRoom(item, room.value) && checkGuest(item, guest.value);
     });
 
     console.log('ТИП ' + type.value + ' ПРАЙС ' + price.value + ' КОМНАТЫ ' + room.value + ' ГОСТИ ' + guest.value);
 
-    console.log(filterResult);
-
+    window.pin.insertPin(filterResult);
   });
 
 })();

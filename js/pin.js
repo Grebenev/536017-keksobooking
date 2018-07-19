@@ -23,6 +23,17 @@
     pins.appendChild(fragment);
   };
 
-  window.insertPin = insertPin;
+  var removePin = function () {
+    var mapPins = window.variables.map.querySelectorAll('.map__pin');
+    for (var i = 1; i < mapPins.length; i++) {
+      mapPins[i].parentNode.removeChild(mapPins[i]);
+    }
+  };
+
+  window.pin = {
+    insertPin: insertPin,
+    removePin: removePin
+  };
+
   window.dragAndDrop();
 })();
