@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  // var CARD_QUANTITY = 8;
-
   var createCard = function (obj) {
     var typeHomes = {
       palace: 'Дворец',
@@ -19,23 +17,29 @@
     clearDom('.popup__photos');
     clearDom('.popup__features');
 
-    var parentFeatures = window.variables.template.content.querySelector('.popup__features');
-    for (var i = 0; i < obj.offer.features.length; i++) {
-      var createEl = document.createElement('li');
-      createEl.className = 'popup__feature' + ' popup__feature--' + obj.offer.features[i];
-      parentFeatures.appendChild(createEl);
-    }
+    var createElementFeatures = function () {
+      var parentFeatures = window.variables.template.content.querySelector('.popup__features');
+      obj.offer.features.forEach(function (element) {
+        var createEl = document.createElement('li');
+        createEl.className = 'popup__feature' + ' popup__feature--' + element;
+        parentFeatures.appendChild(createEl);
+      });
+    };
+    createElementFeatures();
 
-    var parentPhotos = window.variables.template.content.querySelector('.popup__photos');
-    for (var j = 0; j < obj.offer.photos.length; j++) {
-      var createElement = document.createElement('img');
-      createElement.className = 'popup__photo';
-      createElement.setAttribute('src', obj.offer.photos[j]);
-      createElement.setAttribute('width', '45');
-      createElement.setAttribute('height', '40');
-      createElement.setAttribute('alt', 'Фотография жилья');
-      parentPhotos.appendChild(createElement);
-    }
+    var creteElementPhotos = function () {
+      var parentPhotos = window.variables.template.content.querySelector('.popup__photos');
+      obj.offer.photos.forEach(function (element) {
+        var createElement = document.createElement('img');
+        createElement.className = 'popup__photo';
+        createElement.setAttribute('src', element);
+        createElement.setAttribute('width', '45');
+        createElement.setAttribute('height', '40');
+        createElement.setAttribute('alt', 'Фотография жилья');
+        parentPhotos.appendChild(createElement);
+      });
+    };
+    creteElementPhotos();
 
     var cardTemplate = window.variables.template.content.querySelector('.map__card');
     var cardElement = cardTemplate.cloneNode(true);
@@ -91,9 +95,8 @@
     }
   });
 
-  // Удаление карточки по Esc
   document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 27) {
+    if (evt.keyCode === window.variables.ESC_KEYCODE) {
       removeCard();
     }
   });

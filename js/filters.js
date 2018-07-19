@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var PRICE_MIN = 10000;
+  var PRICE_MAX = 50000;
 
   var filterForm = document.querySelector('.map__filters');
   var type = filterForm.querySelector('#housing-type');
@@ -17,11 +19,11 @@
   var checkPrice = function (offerObject, value) {
     switch (value) {
       case 'middle':
-        return offerObject.offer.price >= 10000 && offerObject.offer.price <= 50000;
+        return offerObject.offer.price >= PRICE_MIN && offerObject.offer.price <= PRICE_MAX;
       case 'low':
-        return offerObject.offer.price < 10000;
+        return offerObject.offer.price < PRICE_MIN;
       case 'high':
-        return offerObject.offer.price > 50000;
+        return offerObject.offer.price > PRICE_MAX;
     }
     return true;
   };

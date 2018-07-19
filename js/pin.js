@@ -17,9 +17,9 @@
 
   var insertPin = function (array) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < array.length; i++) {
-      fragment.appendChild(createPin(array[i], i));
-    }
+    array.forEach(function (element, index) {
+      fragment.appendChild(createPin(element, index));
+    });
     pins.appendChild(fragment);
   };
 

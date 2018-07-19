@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var TIMEUOT_MESSAGE = 1500;
+
   var showMessage = function (message) {
     var node = document.createElement('div');
     node.style = 'z-index: 2; margin: 0 auto; padding: 10px; text-align: center; border: 1px solid #fff';
@@ -22,7 +24,7 @@
       document.body.removeChild(element);
     };
 
-    setTimeout(removeElement, 1500);
+    setTimeout(removeElement, TIMEUOT_MESSAGE);
   };
 
   var onError = function (message) {
@@ -31,15 +33,15 @@
 
   var onLoad = function (data) {
     window.items = data;
-    window.pin.insertPin(window.items); // вставляем пины по загрузке data
+    window.pin.insertPin(window.items.slice(0, 5)); // вставляем пины по загрузке data
   };
 
-  var filterForm = document.querySelector('.map__filters');
-  filterForm.addEventListener('change', function () {
+  var onFilterChange = function () {
     window.pin.removePin();
     window.removeCard();
-    window.pin.insertPin(window.filterResult());
-  });
+
+    window.pin.insertPin(window.filterResult().slice(0, 5));
+  };
 
   var capacity = window.variables.forms.querySelector('#capacity');
   var title = window.variables.forms.querySelector('#title');
@@ -57,14 +59,17 @@
 
   var disableFieldsets = function (swich) {
     var fieldsets = window.variables.forms.querySelectorAll('fieldset');
-    for (var i = 0; i < fieldsets.length; i++) {
-      if (swich === 'off') {
-        fieldsets[i].disabled = false;
+    fieldsets.forEach(function (element) {
+      switch (swich) {
+        case 'off':
+          element.disabled = false;
+          break;
+        case 'on':
+          element.disabled = true;
+          break;
       }
-      if (swich === 'on') {
-        fieldsets[i].disabled = true;
-      }
-    }
+    });
+
   };
 
   var onCapacityChange = function () {
@@ -130,18 +135,32 @@
   };
   setAddress(startMainPinX + window.variables.MAIN_PIN_WIDTH / 2, startMainPinY + window.variables.MAIN_PIN_HEIGHT / 2);
 
+
   var active = function () {
     window.backend.load(onLoad, onError);
-
     window.variables.map.classList.remove('map--faded');
     window.variables.forms.classList.remove('ad-form--disabled');
-
     disableFieldsets('off');
 
     form.addEventListener('submit', function (evt) {
-
       window.backend.upLoad(new FormData(form), function () {
         resetForm();
+        var success = document.querySelector('.success');
+        success.classList.remove('hidden');
+        var onEscPress = function (event) {
+          if (event.keyCode === window.variables.ESC_KEYCODE) {
+            document.querySelector('.success').classList.add('hidden');
+          }
+          removeEventListener('keydown', onEscPress);
+        };
+
+        var onClick = function () {
+          document.querySelector('.success').classList.add('hidden');
+          removeEventListener('click', onClick);
+        };
+
+        document.addEventListener('keydown', onEscPress);
+        success.addEventListener('click', onClick);
       }, onError);
 
       evt.preventDefault();
@@ -162,14 +181,13 @@
     timein.addEventListener('change', onTimeinChange);
     timeout.addEventListener('change', onTimeoutChange);
     reset.addEventListener('click', resetForm);
+    window.variables.mapFilters.addEventListener('change', window.debounce(onFilterChange));
   };
 
   var resetForm = function () {
-    // var mapPins = window.variables.map.querySelectorAll('.map__pin');
-    // window.variables.forms.reset();
-    // for (var i = 1; i < mapPins.length; i++) {
-    //   mapPins[i].parentNode.removeChild(mapPins[i]);
-    // }
+
+    window.variables.forms.reset();
+    window.variables.mapFilters.reset();
     window.pin.removePin();
     window.removeCard();
     removeBorder(title);
@@ -194,6 +212,7 @@
     type.removeEventListener('change', onTypeChange);
     button.removeEventListener('click', onCapacityChange);
     reset.removeEventListener('click', resetForm);
+    window.variables.mapFilters.removeEventListener('change', onFilterChange);
 
     window.variables.map.classList.add('map--faded');
     window.variables.forms.classList.add('ad-form--disabled');
