@@ -81,11 +81,11 @@
     }
 
     if (evt.target.dataset.id) {
-      insertCard(window.items[evt.target.dataset.id]);
+      insertCard(window.filterResult()[evt.target.dataset.id]);
       window.variables.map.querySelector('[data-id = "' + evt.target.dataset.id + '"]').classList.add('map__pin--active');
 
     } else if (evt.target.parentElement.dataset.id) {
-      insertCard(window.items[evt.target.parentElement.dataset.id]);
+      insertCard(window.filterResult()[evt.target.parentElement.dataset.id]);
       window.variables.map.querySelector('[data-id = "' + evt.target.parentElement.dataset.id + '"]').classList.add('map__pin--active');
 
     }

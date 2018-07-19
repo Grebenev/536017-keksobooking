@@ -31,9 +31,15 @@
 
   var onLoad = function (data) {
     window.items = data;
-    // window.insertPin(window.items); // вставляем пины по загрузке data
-    // window.insertPin(window.filterResult); // вставляем пины по фильтру
+    window.pin.insertPin(window.items); // вставляем пины по загрузке data
   };
+
+  var filterForm = document.querySelector('.map__filters');
+  filterForm.addEventListener('change', function () {
+    window.pin.removePin();
+    window.removeCard();
+    window.pin.insertPin(window.filterResult());
+  });
 
   var capacity = window.variables.forms.querySelector('#capacity');
   var title = window.variables.forms.querySelector('#title');
