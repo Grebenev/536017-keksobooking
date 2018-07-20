@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var TIMEOUT_MESSAGE = 1500;
+
   var showMessage = function (message) {
     var node = document.createElement('div');
     node.style = 'z-index: 2; margin: 0 auto; padding: 10px; text-align: center; border: 1px solid #fff';
@@ -22,7 +24,7 @@
       document.body.removeChild(element);
     };
 
-    setTimeout(removeElement, 1500);
+    setTimeout(removeElement, TIMEOUT_MESSAGE);
   };
 
   var onError = function (message) {
@@ -31,7 +33,14 @@
 
   var onLoad = function (data) {
     window.items = data;
-    window.insertPin(window.items); // вставляем пины по загрузке data
+    window.pin.insertPin(window.items.slice(0, 5)); // вставляем пины по загрузке data
+  };
+
+  var onFilterChange = function () {
+    window.pin.removePin();
+    window.card.removeCard();
+
+    window.pin.insertPin(window.filterResult().slice(0, 5));
   };
 
   var capacity = window.variables.forms.querySelector('#capacity');
@@ -42,22 +51,25 @@
   var timein = window.variables.forms.querySelector('#timein');
   var timeout = window.variables.forms.querySelector('#timeout');
   var button = window.variables.forms.querySelector('.ad-form__submit');
-  var reset = document.querySelector('.ad-form__reset');
   var form = document.querySelector('.ad-form');
+  var reset = form.querySelector('.ad-form__reset');
 
   var startMainPinY = window.variables.mainPin.offsetTop; // начальные значения главного пина
   var startMainPinX = window.variables.mainPin.offsetLeft;
 
-  var disableFieldsets = function (swich) {
+  var disableFieldsets = function (value) {
     var fieldsets = window.variables.forms.querySelectorAll('fieldset');
-    for (var i = 0; i < fieldsets.length; i++) {
-      if (swich === 'off') {
-        fieldsets[i].disabled = false;
+    fieldsets.forEach(function (element) {
+      switch (value) {
+        case 'off':
+          element.disabled = false;
+          break;
+        case 'on':
+          element.disabled = true;
+          break;
       }
-      if (swich === 'on') {
-        fieldsets[i].disabled = true;
-      }
-    }
+    });
+
   };
 
   var onCapacityChange = function () {
@@ -123,24 +135,40 @@
   };
   setAddress(startMainPinX + window.variables.MAIN_PIN_WIDTH / 2, startMainPinY + window.variables.MAIN_PIN_HEIGHT / 2);
 
-  var active = function () {
-    window.backend.load(onLoad, onError);
 
+  var activate = function () {
+    window.backend.load(onLoad, onError);
     window.variables.map.classList.remove('map--faded');
     window.variables.forms.classList.remove('ad-form--disabled');
-
     disableFieldsets('off');
 
-    form.addEventListener('submit', function (evt) {
-
+    var onSubmit = function (evt) {
       window.backend.upLoad(new FormData(form), function () {
-        resetForm();
+        resetForm(evt);
+        var success = document.querySelector('.success');
+        success.classList.remove('hidden');
+
+        var onPressEsc = function (event) {
+          if (event.keyCode === window.variables.ESC_KEYCODE) {
+            document.querySelector('.success').classList.add('hidden');
+          }
+          removeEventListener('keydown', onPressEsc);
+        };
+
+        var onClick = function () {
+          document.querySelector('.success').classList.add('hidden');
+          removeEventListener('click', onClick);
+        };
+
+        document.addEventListener('keydown', onPressEsc);
+        success.addEventListener('click', onClick);
       }, onError);
 
+      form.removeEventListener('submit', onSubmit);
       evt.preventDefault();
-    });
+    };
 
-    // Активируем слушателей
+    form.addEventListener('submit', onSubmit);
     title.addEventListener('invalid', onTitleInvalid);
     title.addEventListener('input', onTitleInvalid);
     price.addEventListener('invalid', onPriceInvalid);
@@ -155,27 +183,25 @@
     timein.addEventListener('change', onTimeinChange);
     timeout.addEventListener('change', onTimeoutChange);
     reset.addEventListener('click', resetForm);
+    window.variables.map.addEventListener('click', window.pin.onClickPin);
+    window.variables.mapFilters.addEventListener('change', window.debounce(onFilterChange));
   };
 
-  var resetForm = function () {
-    var mapPins = window.variables.map.querySelectorAll('.map__pin');
+  var resetForm = function (evt) {
+    evt.preventDefault();
     window.variables.forms.reset();
-    for (var i = 1; i < mapPins.length; i++) {
-      mapPins[i].parentNode.removeChild(mapPins[i]);
-    }
-
-    window.removeCard();
+    window.variables.mapFilters.reset();
+    window.pin.removePin();
+    window.card.removeCard();
     removeBorder(title);
     removeBorder(price);
     removeBorder(capacity);
-
-    // возврат главного пина
+    price.placeholder = 1000;
     window.variables.mainPin.style.top = startMainPinY + 'px';
     window.variables.mainPin.style.left = startMainPinX + 'px';
 
     setAddress(startMainPinX + window.variables.MAIN_PIN_WIDTH / 2, startMainPinY + window.variables.MAIN_PIN_HEIGHT / 2);
 
-    // сброс слушателей
     title.removeEventListener('invalid', onTitleInvalid);
     title.removeEventListener('input', onTitleInvalid);
     price.removeEventListener('invalid', onPriceInvalid);
@@ -187,6 +213,9 @@
     type.removeEventListener('change', onTypeChange);
     button.removeEventListener('click', onCapacityChange);
     reset.removeEventListener('click', resetForm);
+    window.variables.map.removeEventListener('click', window.pin.onClickPin);
+
+    window.variables.mapFilters.removeEventListener('change', onFilterChange);
 
     window.variables.map.classList.add('map--faded');
     window.variables.forms.classList.add('ad-form--disabled');
@@ -195,7 +224,7 @@
 
   window.form = {
     setAddress: setAddress,
-    active: active
+    activate: activate
   };
 
   disableFieldsets('on');

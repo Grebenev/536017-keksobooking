@@ -1,7 +1,27 @@
 'use strict';
 
 (function () {
-  // var CARD_QUANTITY = 8;
+  var createElementFeatures = function (obj) {
+    var parentFeatures = window.variables.template.content.querySelector('.popup__features');
+    obj.offer.features.forEach(function (element) {
+      var createEl = document.createElement('li');
+      createEl.className = 'popup__feature' + ' popup__feature--' + element;
+      parentFeatures.appendChild(createEl);
+    });
+  };
+
+  var creteElementPhotos = function (obj) {
+    var parentPhotos = window.variables.template.content.querySelector('.popup__photos');
+    obj.offer.photos.forEach(function (element) {
+      var createElement = document.createElement('img');
+      createElement.className = 'popup__photo';
+      createElement.setAttribute('src', element);
+      createElement.setAttribute('width', '45');
+      createElement.setAttribute('height', '40');
+      createElement.setAttribute('alt', 'Фотография жилья');
+      parentPhotos.appendChild(createElement);
+    });
+  };
 
   var createCard = function (obj) {
     var typeHomes = {
@@ -11,14 +31,6 @@
       bungalo: 'Бунгало'
     };
 
-    var parentFeatures = window.variables.template.content.querySelector('.popup__features');
-    for (var i = 0; i < obj.offer.features.length; i++) {
-      var createEl = document.createElement('li');
-      createEl.className = 'popup__feature' + ' popup__feature--' + obj.offer.features[i];
-      parentFeatures.appendChild(createEl);
-    }
-
-    // Функция очистки DOM
     var clearDom = function (classname) {
       var clear = window.variables.template.content.querySelector(classname);
       clear.innerHTML = '';
@@ -26,16 +38,8 @@
     clearDom('.popup__photos');
     clearDom('.popup__features');
 
-    var parentPhotos = window.variables.template.content.querySelector('.popup__photos');
-    for (var j = 0; j < obj.offer.photos.length; j++) {
-      var createElement = document.createElement('img');
-      createElement.className = 'popup__photo';
-      createElement.setAttribute('src', obj.offer.photos[j]);
-      createElement.setAttribute('width', '45');
-      createElement.setAttribute('height', '40');
-      createElement.setAttribute('alt', 'Фотография жилья');
-      parentPhotos.appendChild(createElement);
-    }
+    createElementFeatures(obj);
+    creteElementPhotos(obj);
 
     var cardTemplate = window.variables.template.content.querySelector('.map__card');
     var cardElement = cardTemplate.cloneNode(true);
@@ -53,7 +57,6 @@
     cardElement.querySelector('.popup__description').textContent = obj.offer.description;
     return cardElement;
   };
-
 
   var insertCard = function (obj) {
     removeCard();
@@ -75,28 +78,16 @@
     }
   };
 
-  window.variables.map.addEventListener('click', function (evt) {
-    if (evt.target.className === 'popup__close') {
+  var onPressEsc = function (evt) {
+    if (evt.keyCode === window.variables.ESC_KEYCODE) {
       removeCard();
     }
+  };
 
-    if (evt.target.dataset.id) {
-      insertCard(window.items[evt.target.dataset.id]);
-      window.variables.map.querySelector('[data-id = "' + evt.target.dataset.id + '"]').classList.add('map__pin--active');
+  document.addEventListener('keydown', onPressEsc);
 
-    } else if (evt.target.parentElement.dataset.id) {
-      insertCard(window.items[evt.target.parentElement.dataset.id]);
-      window.variables.map.querySelector('[data-id = "' + evt.target.parentElement.dataset.id + '"]').classList.add('map__pin--active');
-
-    }
-  });
-
-  // Удаление карточки по Esc
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 27) {
-      removeCard();
-    }
-  });
-
-  window.removeCard = removeCard;
+  window.card = {
+    removeCard: removeCard,
+    insertCard: insertCard
+  };
 })();

@@ -1,13 +1,16 @@
 'use strict';
 
 (function () {
-  var dragAndDrop = function () {
+  var TOP = 129;
+  var BOTTOM = 631;
+
+  var movePin = function () {
     var pins = document.querySelector('.map__pins');
 
     window.variables.mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
 
-      window.form.active();
+      window.form.activate();
       window.form.setAddress(window.variables.mainPin.offsetLeft + window.variables.MAIN_PIN_WIDTH / 2, window.variables.mainPin.offsetTop + window.variables.MAIN_PIN_HEIGHT);
 
       var startCoords = {
@@ -28,8 +31,8 @@
           y: moveEvt.clientY
         };
 
-        var pinTopStart = 130 - window.variables.MAIN_PIN_HEIGHT - 1;
-        var pinTopEnd = 630 - window.variables.MAIN_PIN_HEIGHT + 1;
+        var pinTopStart = TOP - window.variables.MAIN_PIN_HEIGHT;
+        var pinTopEnd = BOTTOM - window.variables.MAIN_PIN_HEIGHT;
         var pinLeftStart = 0;
         var pinLeftEnd = window.variables.map.offsetWidth - window.variables.MAIN_PIN_WIDTH;
 
@@ -56,5 +59,5 @@
 
     });
   };
-  window.dragAndDrop = dragAndDrop;
+  window.movePin = movePin;
 })();
