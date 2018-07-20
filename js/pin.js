@@ -30,10 +30,24 @@
     }
   };
 
-  window.pin = {
-    insertPin: insertPin,
-    removePin: removePin
+  var onClickPin = function (evt) {
+    if (evt.target.className === 'popup__close') {
+      window.card.removeCard();
+    }
+    if (evt.target.dataset.id) {
+      window.card.insertCard(window.filterResult()[evt.target.dataset.id]);
+      window.variables.map.querySelector('[data-id = "' + evt.target.dataset.id + '"]').classList.add('map__pin--active');
+
+    } else if (evt.target.parentElement.dataset.id) {
+      window.card.insertCard(window.filterResult()[evt.target.parentElement.dataset.id]);
+      window.variables.map.querySelector('[data-id = "' + evt.target.parentElement.dataset.id + '"]').classList.add('map__pin--active');
+    }
   };
 
+  window.pin = {
+    insertPin: insertPin,
+    removePin: removePin,
+    onClickPin: onClickPin
+  };
   window.dragAndDrop();
 })();

@@ -38,7 +38,7 @@
 
   var onFilterChange = function () {
     window.pin.removePin();
-    window.removeCard();
+    window.card.removeCard();
 
     window.pin.insertPin(window.filterResult().slice(0, 5));
   };
@@ -147,11 +147,12 @@
         resetForm();
         var success = document.querySelector('.success');
         success.classList.remove('hidden');
-        var onEscPress = function (event) {
+
+        var onPressEsc = function (event) {
           if (event.keyCode === window.variables.ESC_KEYCODE) {
             document.querySelector('.success').classList.add('hidden');
           }
-          removeEventListener('keydown', onEscPress);
+          removeEventListener('keydown', onPressEsc);
         };
 
         var onClick = function () {
@@ -159,7 +160,7 @@
           removeEventListener('click', onClick);
         };
 
-        document.addEventListener('keydown', onEscPress);
+        document.addEventListener('keydown', onPressEsc);
         success.addEventListener('click', onClick);
       }, onError);
 
@@ -182,6 +183,7 @@
     timein.addEventListener('change', onTimeinChange);
     timeout.addEventListener('change', onTimeoutChange);
     reset.addEventListener('click', resetForm);
+    window.variables.map.addEventListener('click', window.pin.onClickPin);
     window.variables.mapFilters.addEventListener('change', window.debounce(onFilterChange));
   };
 
@@ -190,7 +192,7 @@
     window.variables.forms.reset();
     window.variables.mapFilters.reset();
     window.pin.removePin();
-    window.removeCard();
+    window.card.removeCard();
     removeBorder(title);
     removeBorder(price);
     removeBorder(capacity);
@@ -211,6 +213,7 @@
     type.removeEventListener('change', onTypeChange);
     button.removeEventListener('click', onCapacityChange);
     reset.removeEventListener('click', resetForm);
+    window.variables.map.removeEventListener('click', window.pin.onClickPin);
 
     window.variables.mapFilters.removeEventListener('change', onFilterChange);
 

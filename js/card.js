@@ -78,22 +78,6 @@
     }
   };
 
-  var onClickPins = function (evt) {
-    if (evt.target.className === 'popup__close') {
-      removeCard();
-    }
-    if (evt.target.dataset.id) {
-      insertCard(window.filterResult()[evt.target.dataset.id]);
-      window.variables.map.querySelector('[data-id = "' + evt.target.dataset.id + '"]').classList.add('map__pin--active');
-
-    } else if (evt.target.parentElement.dataset.id) {
-      insertCard(window.filterResult()[evt.target.parentElement.dataset.id]);
-      window.variables.map.querySelector('[data-id = "' + evt.target.parentElement.dataset.id + '"]').classList.add('map__pin--active');
-    }
-  };
-
-  window.variables.map.addEventListener('click', onClickPins);
-
   var onPressEsc = function (evt) {
     if (evt.keyCode === window.variables.ESC_KEYCODE) {
       removeCard();
@@ -102,5 +86,8 @@
 
   document.addEventListener('keydown', onPressEsc);
 
-  window.removeCard = removeCard;
+  window.card = {
+    removeCard: removeCard,
+    insertCard: insertCard
+  };
 })();
