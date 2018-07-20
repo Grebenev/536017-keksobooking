@@ -49,5 +49,5 @@
     removePin: removePin,
     onClickPin: onClickPin
   };
-  window.dragAndDrop();
+  window.pinMove();
 })();

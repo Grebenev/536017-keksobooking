@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var TIMEUOT_MESSAGE = 1500;
+  var TIMEOUT_MESSAGE = 1500;
 
   var showMessage = function (message) {
     var node = document.createElement('div');
@@ -24,7 +24,7 @@
       document.body.removeChild(element);
     };
 
-    setTimeout(removeElement, TIMEUOT_MESSAGE);
+    setTimeout(removeElement, TIMEOUT_MESSAGE);
   };
 
   var onError = function (message) {
@@ -144,7 +144,7 @@
 
     var onSubmit = function (evt) {
       window.backend.upLoad(new FormData(form), function () {
-        resetForm();
+        resetForm(evt);
         var success = document.querySelector('.success');
         success.classList.remove('hidden');
 
@@ -187,8 +187,8 @@
     window.variables.mapFilters.addEventListener('change', window.debounce(onFilterChange));
   };
 
-  var resetForm = function () {
-
+  var resetForm = function (evt) {
+    evt.preventDefault();
     window.variables.forms.reset();
     window.variables.mapFilters.reset();
     window.pin.removePin();
@@ -196,7 +196,7 @@
     removeBorder(title);
     removeBorder(price);
     removeBorder(capacity);
-
+    price.placeholder = 1000;
     window.variables.mainPin.style.top = startMainPinY + 'px';
     window.variables.mainPin.style.left = startMainPinX + 'px';
 

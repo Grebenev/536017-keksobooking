@@ -8,7 +8,7 @@
   var ESC_KEYCODE = 27;
   var map = document.querySelector('.map');
   var forms = document.querySelector('.ad-form');
-  var mainPin = document.querySelector('.map__pin--main');
+  var mainPin = map.querySelector('.map__pin--main');
   var template = document.querySelector('template');
   var mapFilters = document.querySelector('.map__filters');
 
