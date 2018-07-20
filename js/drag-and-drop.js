@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var TOP =129;
+  var TOP = 129;
   var BOTTOM = 631;
 
   var dragAndDrop = function () {
@@ -10,7 +10,7 @@
     window.variables.mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
 
-      window.form.active();
+      window.form.activate();
       window.form.setAddress(window.variables.mainPin.offsetLeft + window.variables.MAIN_PIN_WIDTH / 2, window.variables.mainPin.offsetTop + window.variables.MAIN_PIN_HEIGHT);
 
       var startCoords = {
