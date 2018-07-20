@@ -9,7 +9,6 @@
       bungalo: 'Бунгало'
     };
 
-    // Функция очистки DOM
     var clearDom = function (classname) {
       var clear = window.variables.template.content.querySelector(classname);
       clear.innerHTML = '';

@@ -166,7 +166,6 @@
       evt.preventDefault();
     });
 
-    // Активируем слушателей
     title.addEventListener('invalid', onTitleInvalid);
     title.addEventListener('input', onTitleInvalid);
     price.addEventListener('invalid', onPriceInvalid);
@@ -194,13 +193,11 @@
     removeBorder(price);
     removeBorder(capacity);
 
-    // возврат главного пина
     window.variables.mainPin.style.top = startMainPinY + 'px';
     window.variables.mainPin.style.left = startMainPinX + 'px';
 
     setAddress(startMainPinX + window.variables.MAIN_PIN_WIDTH / 2, startMainPinY + window.variables.MAIN_PIN_HEIGHT / 2);
 
-    // сброс слушателей
     title.removeEventListener('invalid', onTitleInvalid);
     title.removeEventListener('input', onTitleInvalid);
     price.removeEventListener('invalid', onPriceInvalid);

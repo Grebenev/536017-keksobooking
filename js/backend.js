@@ -52,7 +52,6 @@
     return xhr;
   };
 
-  // загрузка
   var load = function (onLoad, onError) {
     var xhr = getRequest(onLoad, onError);
 
@@ -60,7 +59,6 @@
     xhr.send();
   };
 
-  // отправка
   var upLoad = function (data, onLoad, onError) {
     var xhr = getRequest(onLoad, onError);
 

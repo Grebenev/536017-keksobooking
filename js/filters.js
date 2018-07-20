@@ -10,12 +10,10 @@
   var rooms = filterForm.querySelector('#housing-rooms');
   var guests = filterForm.querySelector('#housing-guests');
 
-  // ТИП
   var checkType = function (offerObject, value) {
     return value === 'any' ? true : offerObject.offer.type === value;
   };
 
-  // ПРАЙС
   var checkPrice = function (offerObject, value) {
     switch (value) {
       case 'middle':
@@ -28,17 +26,14 @@
     return true;
   };
 
-  // КОМНАТЫ
   var checkRooms = function (offerObject, value) {
     return value === 'any' ? true : offerObject.offer.rooms === +value;
   };
 
-  // ГОСТИ
   var checkGuests = function (offerObject, value) {
     return value === 'any' ? true : offerObject.offer.guests === +value; // возвращает TRUE или FALSE
   };
 
-  // ЧЕКБОКСЫ
   var checkboxElement = document.querySelectorAll('.map__checkbox');
   var checkFeatures = function (offerObject, element) {
     var checkedArray = [];
@@ -59,7 +54,6 @@
     }
   };
 
-  // ОСНОВНАЯ
   var filterResult = function () {
     return window.items.filter(function (item) {
       return checkType(item, type.value) && checkPrice(item, price.value) && checkRooms(item, rooms.value) && checkGuests(item, guests.value) && checkFeatures(item, checkboxElement);

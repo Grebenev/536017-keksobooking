@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var PIN_WHIDTH = 50;
   var PIN_HEIGHT = 70;
@@ -23,5 +24,4 @@
     MAIN_PIN_HEIGHT: MAIN_PIN_HEIGHT,
     ESC_KEYCODE: ESC_KEYCODE
   };
-
 })();
