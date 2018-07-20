@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var TOP =129;
+  var BOTTOM = 631;
+
   var dragAndDrop = function () {
     var pins = document.querySelector('.map__pins');
 
@@ -28,8 +31,8 @@
           y: moveEvt.clientY
         };
 
-        var pinTopStart = 130 - window.variables.MAIN_PIN_HEIGHT - 1;
-        var pinTopEnd = 630 - window.variables.MAIN_PIN_HEIGHT + 1;
+        var pinTopStart = TOP - window.variables.MAIN_PIN_HEIGHT;
+        var pinTopEnd = BOTTOM - window.variables.MAIN_PIN_HEIGHT;
         var pinLeftStart = 0;
         var pinLeftEnd = window.variables.map.offsetWidth - window.variables.MAIN_PIN_WIDTH;
 
