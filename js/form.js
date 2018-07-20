@@ -51,16 +51,16 @@
   var timein = window.variables.forms.querySelector('#timein');
   var timeout = window.variables.forms.querySelector('#timeout');
   var button = window.variables.forms.querySelector('.ad-form__submit');
-  var reset = document.querySelector('.ad-form__reset');
   var form = document.querySelector('.ad-form');
+  var reset = form.querySelector('.ad-form__reset');
 
   var startMainPinY = window.variables.mainPin.offsetTop; // начальные значения главного пина
   var startMainPinX = window.variables.mainPin.offsetLeft;
 
-  var disableFieldsets = function (swich) {
+  var disableFieldsets = function (value) {
     var fieldsets = window.variables.forms.querySelectorAll('fieldset');
     fieldsets.forEach(function (element) {
-      switch (swich) {
+      switch (value) {
         case 'off':
           element.disabled = false;
           break;
@@ -136,13 +136,13 @@
   setAddress(startMainPinX + window.variables.MAIN_PIN_WIDTH / 2, startMainPinY + window.variables.MAIN_PIN_HEIGHT / 2);
 
 
-  var active = function () {
+  var activate = function () {
     window.backend.load(onLoad, onError);
     window.variables.map.classList.remove('map--faded');
     window.variables.forms.classList.remove('ad-form--disabled');
     disableFieldsets('off');
 
-    form.addEventListener('submit', function (evt) {
+    var onSubmit = function (evt) {
       window.backend.upLoad(new FormData(form), function () {
         resetForm();
         var success = document.querySelector('.success');
@@ -163,9 +163,11 @@
         success.addEventListener('click', onClick);
       }, onError);
 
+      form.removeEventListener('submit', onSubmit);
       evt.preventDefault();
-    });
+    };
 
+    form.addEventListener('submit', onSubmit);
     title.addEventListener('invalid', onTitleInvalid);
     title.addEventListener('input', onTitleInvalid);
     price.addEventListener('invalid', onPriceInvalid);
@@ -209,6 +211,7 @@
     type.removeEventListener('change', onTypeChange);
     button.removeEventListener('click', onCapacityChange);
     reset.removeEventListener('click', resetForm);
+
     window.variables.mapFilters.removeEventListener('change', onFilterChange);
 
     window.variables.map.classList.add('map--faded');
@@ -218,7 +221,7 @@
 
   window.form = {
     setAddress: setAddress,
-    active: active
+    activate: activate
   };
 
   disableFieldsets('on');
