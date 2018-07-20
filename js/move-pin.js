@@ -4,7 +4,7 @@
   var TOP = 129;
   var BOTTOM = 631;
 
-  var pinMove = function () {
+  var movePin = function () {
     var pins = document.querySelector('.map__pins');
 
     window.variables.mainPin.addEventListener('mousedown', function (evt) {
@@ -59,5 +59,5 @@
 
     });
   };
-  window.pinMove = pinMove;
+  window.movePin = movePin;
 })();
