@@ -1,6 +1,28 @@
 'use strict';
 
 (function () {
+  var createElementFeatures = function (obj) {
+    var parentFeatures = window.variables.template.content.querySelector('.popup__features');
+    obj.offer.features.forEach(function (element) {
+      var createEl = document.createElement('li');
+      createEl.className = 'popup__feature' + ' popup__feature--' + element;
+      parentFeatures.appendChild(createEl);
+    });
+  };
+
+  var creteElementPhotos = function (obj) {
+    var parentPhotos = window.variables.template.content.querySelector('.popup__photos');
+    obj.offer.photos.forEach(function (element) {
+      var createElement = document.createElement('img');
+      createElement.className = 'popup__photo';
+      createElement.setAttribute('src', element);
+      createElement.setAttribute('width', '45');
+      createElement.setAttribute('height', '40');
+      createElement.setAttribute('alt', 'Фотография жилья');
+      parentPhotos.appendChild(createElement);
+    });
+  };
+
   var createCard = function (obj) {
     var typeHomes = {
       palace: 'Дворец',
@@ -16,29 +38,8 @@
     clearDom('.popup__photos');
     clearDom('.popup__features');
 
-    var createElementFeatures = function () {
-      var parentFeatures = window.variables.template.content.querySelector('.popup__features');
-      obj.offer.features.forEach(function (element) {
-        var createEl = document.createElement('li');
-        createEl.className = 'popup__feature' + ' popup__feature--' + element;
-        parentFeatures.appendChild(createEl);
-      });
-    };
-    createElementFeatures();
-
-    var creteElementPhotos = function () {
-      var parentPhotos = window.variables.template.content.querySelector('.popup__photos');
-      obj.offer.photos.forEach(function (element) {
-        var createElement = document.createElement('img');
-        createElement.className = 'popup__photo';
-        createElement.setAttribute('src', element);
-        createElement.setAttribute('width', '45');
-        createElement.setAttribute('height', '40');
-        createElement.setAttribute('alt', 'Фотография жилья');
-        parentPhotos.appendChild(createElement);
-      });
-    };
-    creteElementPhotos();
+    createElementFeatures(obj);
+    creteElementPhotos(obj);
 
     var cardTemplate = window.variables.template.content.querySelector('.map__card');
     var cardElement = cardTemplate.cloneNode(true);
@@ -56,7 +57,6 @@
     cardElement.querySelector('.popup__description').textContent = obj.offer.description;
     return cardElement;
   };
-
 
   var insertCard = function (obj) {
     removeCard();
@@ -78,11 +78,10 @@
     }
   };
 
-  window.variables.map.addEventListener('click', function (evt) {
+  var onClickPins = function (evt) {
     if (evt.target.className === 'popup__close') {
       removeCard();
     }
-
     if (evt.target.dataset.id) {
       insertCard(window.filterResult()[evt.target.dataset.id]);
       window.variables.map.querySelector('[data-id = "' + evt.target.dataset.id + '"]').classList.add('map__pin--active');
@@ -90,15 +89,18 @@
     } else if (evt.target.parentElement.dataset.id) {
       insertCard(window.filterResult()[evt.target.parentElement.dataset.id]);
       window.variables.map.querySelector('[data-id = "' + evt.target.parentElement.dataset.id + '"]').classList.add('map__pin--active');
-
     }
-  });
+  };
 
-  document.addEventListener('keydown', function (evt) {
+  window.variables.map.addEventListener('click', onClickPins);
+
+  var onPressEsc = function (evt) {
     if (evt.keyCode === window.variables.ESC_KEYCODE) {
       removeCard();
     }
-  });
+  };
+
+  document.addEventListener('keydown', onPressEsc);
 
   window.removeCard = removeCard;
 })();
