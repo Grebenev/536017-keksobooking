@@ -1,29 +1,29 @@
 'use strict';
 
 (function () {
-  var createElementFeatures = function (obj) {
-    var parentFeatures = window.variables.template.content.querySelector('.popup__features');
-    obj.offer.features.forEach(function (element) {
-      var createEl = document.createElement('li');
-      createEl.className = 'popup__feature' + ' popup__feature--' + element;
-      parentFeatures.appendChild(createEl);
+  var createElementFeatures = function (object) {
+    var parentFeature = window.variables.template.content.querySelector('.popup__features');
+    object.offer.features.forEach(function (element) {
+      var createElement = document.createElement('li');
+      createElement.className = 'popup__feature' + ' popup__feature--' + element;
+      parentFeature.appendChild(createElement);
     });
   };
 
-  var creteElementPhotos = function (obj) {
+  var creteElementPhotos = function (object) {
     var parentPhotos = window.variables.template.content.querySelector('.popup__photos');
-    obj.offer.photos.forEach(function (element) {
+    object.offer.photos.forEach(function (element) {
       var createElement = document.createElement('img');
+      createElement.src = element;
+      createElement.style.width = '45px';
+      createElement.style.height = '40px';
+      createElement.alt = 'Фотография жилья';
       createElement.className = 'popup__photo';
-      createElement.setAttribute('src', element);
-      createElement.setAttribute('width', '45');
-      createElement.setAttribute('height', '40');
-      createElement.setAttribute('alt', 'Фотография жилья');
       parentPhotos.appendChild(createElement);
     });
   };
 
-  var createCard = function (obj) {
+  var createCard = function (object) {
     var typeHomes = {
       palace: 'Дворец',
       flat: 'Квартира',
@@ -31,38 +31,37 @@
       bungalo: 'Бунгало'
     };
 
-    var clearDom = function (classname) {
-      var clear = window.variables.template.content.querySelector(classname);
-      clear.innerHTML = '';
+    var clearDom = function (className) {
+      var clearance = window.variables.template.content.querySelector(className);
+      clearance.innerHTML = '';
     };
     clearDom('.popup__photos');
     clearDom('.popup__features');
 
-    createElementFeatures(obj);
-    creteElementPhotos(obj);
+    createElementFeatures(object);
+    creteElementPhotos(object);
 
     var cardTemplate = window.variables.template.content.querySelector('.map__card');
     var cardElement = cardTemplate.cloneNode(true);
-    cardElement.querySelector('.popup__avatar').src = obj.author.avatar;
-    cardElement.querySelector('.popup__title').textContent = obj.offer.title;
-    cardElement.querySelector('.popup__text--address').textContent = obj.offer.address;
-    cardElement.querySelector('.popup__text--price').textContent = obj.offer.price + ' ₽/ночь.';
-    for (var key in typeHomes) {
-      if (obj.offer.type === key) {
-        cardElement.querySelector('.popup__type').textContent = typeHomes[key];
-      }
+    cardElement.querySelector('.popup__avatar').src = object.author.avatar;
+    cardElement.querySelector('.popup__title').textContent = object.offer.title;
+    cardElement.querySelector('.popup__text--address').textContent = object.offer.address;
+    cardElement.querySelector('.popup__text--price').textContent = object.offer.price + ' ₽/ночь.';
+
+    if (typeHomes[object.offer.type]) {
+      cardElement.querySelector('.popup__type').textContent = typeHomes[object.offer.type];
     }
-    cardElement.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
-    cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + obj.offer.checkin + ' выезд до ' + obj.offer.checkout;
-    cardElement.querySelector('.popup__description').textContent = obj.offer.description;
+    cardElement.querySelector('.popup__text--capacity').textContent = object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей';
+    cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + object.offer.checkin + ' выезд до ' + object.offer.checkout;
+    cardElement.querySelector('.popup__description').textContent = object.offer.description;
     return cardElement;
   };
 
-  var insertCard = function (obj) {
+  var insertCard = function (object) {
     removeCard();
     var filtersContainer = document.querySelector('.map__filters-container');
     var fragment = document.createDocumentFragment();
-    fragment.appendChild(createCard(obj));
+    fragment.appendChild(createCard(object));
     window.variables.map.insertBefore(fragment, filtersContainer);
   };
 

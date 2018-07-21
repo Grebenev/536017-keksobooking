@@ -10,43 +10,43 @@
   var rooms = filterForm.querySelector('#housing-rooms');
   var guests = filterForm.querySelector('#housing-guests');
 
-  var checkType = function (offerObject, value) {
-    return value === 'any' ? true : offerObject.offer.type === value;
+  var checkType = function (object, value) {
+    return value === 'any' ? true : object.offer.type === value;
   };
 
-  var checkPrice = function (offerObject, value) {
+  var checkPrice = function (object, value) {
     switch (value) {
       case 'middle':
-        return offerObject.offer.price >= PRICE_MIN && offerObject.offer.price <= PRICE_MAX;
+        return object.offer.price >= PRICE_MIN && object.offer.price <= PRICE_MAX;
       case 'low':
-        return offerObject.offer.price < PRICE_MIN;
+        return object.offer.price < PRICE_MIN;
       case 'high':
-        return offerObject.offer.price > PRICE_MAX;
+        return object.offer.price > PRICE_MAX;
     }
     return true;
   };
 
-  var checkRooms = function (offerObject, value) {
-    return value === 'any' ? true : offerObject.offer.rooms === +value;
+  var checkRooms = function (object, value) {
+    return value === 'any' ? true : object.offer.rooms === +value;
   };
 
-  var checkGuests = function (offerObject, value) {
-    return value === 'any' ? true : offerObject.offer.guests === +value; // возвращает TRUE или FALSE
+  var checkGuests = function (object, value) {
+    return value === 'any' ? true : object.offer.guests === +value; // возвращает TRUE или FALSE
   };
 
   var checkboxElements = document.querySelectorAll('.map__checkbox');
-  var checkFeatures = function (offerObject, element) {
+  var checkFeatures = function (object, elements) {
     var checkedArray = [];
 
-    element.forEach(function (el) {
-      if (el.checked) {
-        checkedArray.push(el.value);
+    elements.forEach(function (item) {
+      if (item.checked) {
+        checkedArray.push(item.value);
       }
     });
 
     if (checkedArray) {
       return (checkedArray.every(function (feature) {
-        return (offerObject.offer.features.indexOf(feature) >= 0);
+        return (object.offer.features.indexOf(feature) >= 0);
       }));
     } else {
       return true;

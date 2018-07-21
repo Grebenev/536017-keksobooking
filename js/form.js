@@ -144,7 +144,7 @@
 
     var onSubmit = function (evt) {
       window.backend.upLoad(new FormData(form), function () {
-        resetForm(evt);
+        onFormReset(evt);
         var success = document.querySelector('.success');
         success.classList.remove('hidden');
 
@@ -182,12 +182,12 @@
     type.addEventListener('change', onTypeChange);
     timein.addEventListener('change', onTimeinChange);
     timeout.addEventListener('change', onTimeoutChange);
-    reset.addEventListener('click', resetForm);
-    window.variables.map.addEventListener('click', window.pin.onClickPin);
+    reset.addEventListener('click', onFormReset);
+    window.variables.map.addEventListener('click', window.pin.onPinClick);
     window.variables.mapFilters.addEventListener('change', window.debounce(onFilterChange));
   };
 
-  var resetForm = function (evt) {
+  var onFormReset = function (evt) {
     evt.preventDefault();
     window.variables.forms.reset();
     window.variables.mapFilters.reset();
@@ -212,8 +212,8 @@
     timeout.removeEventListener('change', onTimeoutChange);
     type.removeEventListener('change', onTypeChange);
     button.removeEventListener('click', onCapacityChange);
-    reset.removeEventListener('click', resetForm);
-    window.variables.map.removeEventListener('click', window.pin.onClickPin);
+    reset.removeEventListener('click', onFormReset);
+    window.variables.map.removeEventListener('click', window.pin.onPinClick);
 
     window.variables.mapFilters.removeEventListener('change', onFilterChange);
 

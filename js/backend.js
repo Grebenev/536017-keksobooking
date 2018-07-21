@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var DOWNLOAD_URL = 'https://js.dump.academy/keksobooking/data';
-  var UPLOAD_URL = 'https://js.dump.academy/keksobooking';
+  var DOWNLOADING = 'https://js.dump.academy/keksobooking/data';
+  var UPLOADING = 'https://js.dump.academy/keksobooking';
 
   var TIME_OUT = 2000; // 2s
   var SUCCESS = 200;
@@ -55,14 +55,14 @@
   var load = function (onLoad, onError) {
     var xhr = getRequest(onLoad, onError);
 
-    xhr.open('GET', DOWNLOAD_URL);
+    xhr.open('GET', DOWNLOADING);
     xhr.send();
   };
 
   var upLoad = function (data, onLoad, onError) {
     var xhr = getRequest(onLoad, onError);
 
-    xhr.open('POST', UPLOAD_URL);
+    xhr.open('POST', UPLOADING);
     xhr.send(data);
   };
 

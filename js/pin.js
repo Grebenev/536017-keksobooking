@@ -30,7 +30,7 @@
     }
   };
 
-  var onClickPin = function (evt) {
+  var onPinClick = function (evt) {
     if (evt.target.className === 'popup__close') {
       window.card.removeCard();
     }
@@ -47,7 +47,7 @@
   window.pin = {
     insertPin: insertPin,
     removePin: removePin,
-    onClickPin: onClickPin
+    onPinClick: onPinClick
   };
   window.movePin();
 })();
