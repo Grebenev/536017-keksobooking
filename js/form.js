@@ -20,8 +20,8 @@
     document.body.insertAdjacentElement('afterbegin', node);
 
     var removeElement = function () {
-      var element = document.querySelector('.message');
-      document.body.removeChild(element);
+      var notification = document.querySelector('.message');
+      document.body.removeChild(notification);
     };
 
     setTimeout(removeElement, TIMEOUT_MESSAGE);

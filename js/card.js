@@ -13,13 +13,13 @@
   var creteElementPhotos = function (object) {
     var parentPhotos = window.variables.template.content.querySelector('.popup__photos');
     object.offer.photos.forEach(function (element) {
-      var createElement = document.createElement('img');
-      createElement.src = element;
-      createElement.style.width = '45px';
-      createElement.style.height = '40px';
-      createElement.alt = 'Фотография жилья';
-      createElement.className = 'popup__photo';
-      parentPhotos.appendChild(createElement);
+      var elementCreation = document.createElement('img');
+      elementCreation.src = element;
+      elementCreation.style.width = '45px';
+      elementCreation.style.height = '40px';
+      elementCreation.alt = 'Фотография жилья';
+      elementCreation.className = 'popup__photo';
+      parentPhotos.appendChild(elementCreation);
     });
   };
 
