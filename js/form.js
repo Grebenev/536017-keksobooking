@@ -98,13 +98,14 @@
     timein.options.selectedIndex = timeout.options.selectedIndex;
   };
 
+  var priceObj = {
+    bungalo: '0',
+    flat: '1000',
+    house: '5000',
+    palace: '10000'
+  };
+
   var onTypeChange = function () {
-    var priceObj = {
-      bungalo: '0',
-      flat: '1000',
-      house: '5000',
-      palace: '10000'
-    };
     price.min = priceObj[type.options[type.selectedIndex].value];
     price.placeholder = priceObj[type.options[type.selectedIndex].value];
   };
@@ -196,7 +197,7 @@
     removeBorder(title);
     removeBorder(price);
     removeBorder(capacity);
-    price.placeholder = 1000;
+    price.placeholder = priceObj.flat;
     window.variables.mainPin.style.top = startMainPinY + 'px';
     window.variables.mainPin.style.left = startMainPinX + 'px';
 

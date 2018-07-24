@@ -34,28 +34,25 @@
     return value === 'any' ? true : object.offer.guests === +value; // возвращает TRUE или FALSE
   };
 
-  var checkboxElements = document.querySelectorAll('.map__checkbox');
-  var checkFeatures = function (object, elements) {
-    var checkedArray = [];
 
-    elements.forEach(function (item) {
-      if (item.checked) {
-        checkedArray.push(item.value);
-      }
+  var checkFeatures = function (object) {
+    var checkboxElements = window.variables.mapFilters.querySelectorAll('input:checked');
+    var checkedArray = [];
+    checkboxElements.forEach(function (item) {
+      checkedArray.push(item.value);
     });
 
     if (checkedArray) {
       return (checkedArray.every(function (feature) {
         return (object.offer.features.indexOf(feature) >= 0);
       }));
-    } else {
-      return true;
     }
+    return true;
   };
 
   var filterResult = function () {
     return window.items.filter(function (item) {
-      return checkType(item, type.value) && checkPrice(item, price.value) && checkRooms(item, rooms.value) && checkGuests(item, guests.value) && checkFeatures(item, checkboxElements);
+      return checkType(item, type.value) && checkPrice(item, price.value) && checkRooms(item, rooms.value) && checkGuests(item, guests.value) && checkFeatures(item);
     });
   };
 

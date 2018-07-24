@@ -24,10 +24,10 @@
   };
 
   var removePin = function () {
-    var mapPins = window.variables.map.querySelectorAll('.map__pin');
-    for (var i = 1; i < mapPins.length; i++) {
-      mapPins[i].parentNode.removeChild(mapPins[i]);
-    }
+    var mapPins = window.variables.map.querySelectorAll('[data-id]');
+    mapPins.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
   };
 
   var onPinClick = function (evt) {

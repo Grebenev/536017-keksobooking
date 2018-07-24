@@ -63,6 +63,8 @@
     var fragment = document.createDocumentFragment();
     fragment.appendChild(createCard(object));
     window.variables.map.insertBefore(fragment, filtersContainer);
+    window.variables.map.addEventListener('keydown', onEscPress);
+
   };
 
   var removeCard = function () {
@@ -77,13 +79,12 @@
     }
   };
 
-  var onPressEsc = function (evt) {
+  var onEscPress = function (evt) {
     if (evt.keyCode === window.variables.ESC_KEYCODE) {
       removeCard();
+      window.variables.map.removeEventListener('keydown', onEscPress);
     }
   };
-
-  document.addEventListener('keydown', onPressEsc);
 
   window.card = {
     removeCard: removeCard,
