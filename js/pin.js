@@ -31,9 +31,7 @@
   };
 
   var onPinClick = function (evt) {
-    if (evt.target.className === 'popup__close') {
-      window.card.removeCard();
-    }
+
     if (evt.target.dataset.id) {
       window.card.insertCard(window.filterResult()[evt.target.dataset.id]);
       window.variables.map.querySelector('[data-id = "' + evt.target.dataset.id + '"]').classList.add('map__pin--active');

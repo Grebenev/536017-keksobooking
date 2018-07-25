@@ -62,9 +62,15 @@
     var filtersContainer = document.querySelector('.map__filters-container');
     var fragment = document.createDocumentFragment();
     fragment.appendChild(createCard(object));
+
     window.variables.map.insertBefore(fragment, filtersContainer);
     window.variables.map.addEventListener('keydown', onEscPress);
+    window.variables.map.querySelector('.popup__close').addEventListener('click', onButtonCloseClick);
+  };
 
+  var onButtonCloseClick = function () {
+    window.card.removeCard();
+    window.variables.map.removeEventListener('click', onButtonCloseClick);
   };
 
   var removeCard = function () {
