@@ -69,7 +69,7 @@
   };
 
   var onButtonCloseClick = function () {
-    window.card.removeCard();
+    removeCard();
     window.variables.map.removeEventListener('click', onButtonCloseClick);
   };
 
