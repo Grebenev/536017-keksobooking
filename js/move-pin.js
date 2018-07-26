@@ -3,15 +3,14 @@
 (function () {
   var TOP = 129;
   var BOTTOM = 631;
-  var counter = 0;
 
   var movePin = function () {
     var pins = document.querySelector('.map__pins');
 
     window.variables.mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
-      counter = counter + 1;
-      if (counter === 1) {
+      window.variables.counterActivation = window.variables.counterActivation + 1;
+      if (window.variables.counterActivation === 1) {
         window.form.activate();
       }
 

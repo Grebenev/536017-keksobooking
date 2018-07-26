@@ -190,6 +190,7 @@
 
   var onFormReset = function (evt) {
     evt.preventDefault();
+    window.variables.counterActivation = 0;
     window.variables.forms.reset();
     window.variables.mapFilters.reset();
     window.pin.removePin();
