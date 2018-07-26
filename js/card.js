@@ -23,8 +23,8 @@
     });
   };
 
-  var checkContent = function (data, nameClass) {
-    var result = document.querySelector(nameClass);
+  var checkContent = function (data, elementClassName) {
+    var result = document.querySelector(elementClassName);
 
     if (!data.length) {
       result.classList.add('hidden');
