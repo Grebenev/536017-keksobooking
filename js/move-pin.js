@@ -3,14 +3,18 @@
 (function () {
   var TOP = 129;
   var BOTTOM = 631;
+  var counter = 0;
 
   var movePin = function () {
     var pins = document.querySelector('.map__pins');
 
     window.variables.mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
+      counter = counter + 1;
+      if (counter === 1) {
+        window.form.activate();
+      }
 
-      window.form.activate();
       window.form.setAddress(window.variables.mainPin.offsetLeft + window.variables.MAIN_PIN_WIDTH / 2, window.variables.mainPin.offsetTop + window.variables.MAIN_PIN_HEIGHT);
 
       var startCoords = {
