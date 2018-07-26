@@ -1,26 +1,34 @@
 'use strict';
 
 (function () {
-  var createElementFeatures = function (object) {
+  var createItemList = function (object) {
     var parentFeature = window.variables.template.content.querySelector('.popup__features');
     object.offer.features.forEach(function (element) {
-      var createElement = document.createElement('li');
-      createElement.className = 'popup__feature' + ' popup__feature--' + element;
-      parentFeature.appendChild(createElement);
+      var listItem = document.createElement('li');
+      listItem.className = 'popup__feature' + ' popup__feature--' + element;
+      parentFeature.appendChild(listItem);
     });
   };
 
-  var creteElementPhotos = function (object) {
-    var parentPhotos = window.variables.template.content.querySelector('.popup__photos');
+  var createImageList = function (object) {
+    var parentPhoto = window.variables.template.content.querySelector('.popup__photos');
     object.offer.photos.forEach(function (element) {
-      var elementCreation = document.createElement('img');
-      elementCreation.src = element;
-      elementCreation.style.width = '45px';
-      elementCreation.style.height = '40px';
-      elementCreation.alt = 'Фотография жилья';
-      elementCreation.className = 'popup__photo';
-      parentPhotos.appendChild(elementCreation);
+      var image = document.createElement('img');
+      image.src = element;
+      image.style.width = '45px';
+      image.style.height = '40px';
+      image.alt = 'Фотография жилья';
+      image.className = 'popup__photo';
+      parentPhoto.appendChild(image);
     });
+  };
+
+  var checkContent = function (data, nameClass) {
+    var result = document.querySelector(nameClass);
+
+    if (!data.length) {
+      result.classList.add('hidden');
+    }
   };
 
   var createCard = function (object) {
@@ -31,15 +39,15 @@
       bungalo: 'Бунгало'
     };
 
-    var clearDom = function (className) {
-      var clearance = window.variables.template.content.querySelector(className);
-      clearance.innerHTML = '';
+    var clearDom = function (elementClassName) {
+      var elementToRemove = window.variables.template.content.querySelector(elementClassName);
+      elementToRemove.innerHTML = '';
     };
     clearDom('.popup__photos');
     clearDom('.popup__features');
 
-    createElementFeatures(object);
-    creteElementPhotos(object);
+    createItemList(object);
+    createImageList(object);
 
     var cardTemplate = window.variables.template.content.querySelector('.map__card');
     var cardElement = cardTemplate.cloneNode(true);
@@ -64,6 +72,10 @@
     fragment.appendChild(createCard(object));
 
     window.variables.map.insertBefore(fragment, filtersContainer);
+
+    checkContent(object.offer.features, '.popup__features');
+    checkContent(object.offer.photos, '.popup__photos');
+
     window.variables.map.addEventListener('keydown', onEscPress);
     window.variables.map.querySelector('.popup__close').addEventListener('click', onButtonCloseClick);
   };

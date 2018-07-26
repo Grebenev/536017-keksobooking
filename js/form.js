@@ -33,7 +33,7 @@
 
   var onLoad = function (data) {
     window.items = data;
-    window.pin.insertPin(window.items.slice(0, 5)); // вставляем пины по загрузке data
+    window.pin.insertPin(window.filterResult().slice(0, 5)); // вставляем пины по загрузке data
   };
 
   var onFilterChange = function () {
@@ -98,7 +98,7 @@
     timein.options.selectedIndex = timeout.options.selectedIndex;
   };
 
-  var priceObj = {
+  var priceObject = {
     bungalo: '0',
     flat: '1000',
     house: '5000',
@@ -106,8 +106,8 @@
   };
 
   var onTypeChange = function () {
-    price.min = priceObj[type.options[type.selectedIndex].value];
-    price.placeholder = priceObj[type.options[type.selectedIndex].value];
+    price.min = priceObject[type.options[type.selectedIndex].value];
+    price.placeholder = priceObject[type.options[type.selectedIndex].value];
   };
 
   var checkValiation = function (id) {
@@ -197,7 +197,7 @@
     removeBorder(title);
     removeBorder(price);
     removeBorder(capacity);
-    price.placeholder = priceObj.flat;
+    price.placeholder = priceObject.flat;
     window.variables.mainPin.style.top = startMainPinY + 'px';
     window.variables.mainPin.style.left = startMainPinX + 'px';
 
