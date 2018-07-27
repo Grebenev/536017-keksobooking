@@ -30,10 +30,15 @@
   var onError = function (message) {
     showMessage(message);
   };
+  var onRenderPins = function () {
+    window.form.activate();
+  };
+  window.variables.mainPin.addEventListener('click', onRenderPins);
 
   var onLoad = function (data) {
     window.items = data;
     window.pin.insertPin(window.filterResult().slice(0, 5)); // вставляем пины по загрузке data
+    window.variables.mainPin.removeEventListener('click', onRenderPins);
   };
 
   var onFilterChange = function () {
@@ -136,7 +141,6 @@
   };
   setAddress(startMainPinX + window.variables.MAIN_PIN_WIDTH / 2, startMainPinY + window.variables.MAIN_PIN_HEIGHT / 2);
 
-
   var activate = function () {
     window.backend.load(onLoad, onError);
     window.variables.map.classList.remove('map--faded');
@@ -190,7 +194,6 @@
 
   var onFormReset = function (evt) {
     evt.preventDefault();
-    window.variables.counterActivation = 0;
     window.variables.forms.reset();
     window.variables.mapFilters.reset();
     window.pin.removePin();
@@ -222,6 +225,7 @@
     window.variables.map.classList.add('map--faded');
     window.variables.forms.classList.add('ad-form--disabled');
     disableFieldsets('on');
+    window.variables.mainPin.addEventListener('click', onRenderPins);
   };
 
   window.form = {

@@ -9,11 +9,6 @@
 
     window.variables.mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
-      window.variables.counterActivation = window.variables.counterActivation + 1;
-      if (window.variables.counterActivation === 1) {
-        window.form.activate();
-      }
-
       window.form.setAddress(window.variables.mainPin.offsetLeft + window.variables.MAIN_PIN_WIDTH / 2, window.variables.mainPin.offsetTop + window.variables.MAIN_PIN_HEIGHT);
 
       var startCoords = {

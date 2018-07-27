@@ -11,7 +11,6 @@
   var mainPin = map.querySelector('.map__pin--main');
   var template = document.querySelector('template');
   var mapFilters = document.querySelector('.map__filters');
-  var counterActivation = 0;
 
   window.variables = {
     map: map,
@@ -19,7 +18,6 @@
     mainPin: mainPin,
     template: template,
     mapFilters: mapFilters,
-    counterActivation: counterActivation,
     PIN_WHIDTH: PIN_WHIDTH,
     PIN_HEIGHT: PIN_HEIGHT,
     MAIN_PIN_WIDTH: MAIN_PIN_WIDTH,
