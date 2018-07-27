@@ -30,15 +30,16 @@
   var onError = function (message) {
     showMessage(message);
   };
-  var onRenderPins = function () {
+
+  var onMainPinClick = function () {
     window.form.activate();
   };
-  window.variables.mainPin.addEventListener('click', onRenderPins);
+  window.variables.mainPin.addEventListener('click', onMainPinClick);
 
   var onLoad = function (data) {
     window.items = data;
     window.pin.insertPin(window.filterResult().slice(0, 5)); // вставляем пины по загрузке data
-    window.variables.mainPin.removeEventListener('click', onRenderPins);
+    window.variables.mainPin.removeEventListener('click', onMainPinClick);
   };
 
   var onFilterChange = function () {
@@ -225,7 +226,7 @@
     window.variables.map.classList.add('map--faded');
     window.variables.forms.classList.add('ad-form--disabled');
     disableFieldsets('on');
-    window.variables.mainPin.addEventListener('click', onRenderPins);
+    window.variables.mainPin.addEventListener('click', onMainPinClick);
   };
 
   window.form = {
